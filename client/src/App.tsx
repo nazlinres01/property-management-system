@@ -15,6 +15,7 @@ import Reports from "@/pages/reports";
 import Features from "@/pages/features";
 import About from "@/pages/about";
 import AIDashboard from "@/pages/ai-dashboard";
+import Settings from "@/pages/settings";
 import Sidebar from "@/components/layout/sidebar";
 import ChatWidget from "@/components/chat/chat-widget";
 import { useState } from "react";
@@ -110,6 +111,15 @@ function App() {
               <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
               <main className="lg:ml-64 min-h-screen">
                 <AIDashboard onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+              </main>
+            </div>
+          </Route>
+          
+          <Route path="/settings">
+            <div className="min-h-screen bg-[hsl(var(--kiratakip-surface))]">
+              <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+              <main className="lg:ml-64 min-h-screen">
+                <Settings onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
               </main>
             </div>
           </Route>
