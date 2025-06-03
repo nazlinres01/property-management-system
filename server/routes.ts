@@ -1,6 +1,8 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
+import bcrypt from "bcryptjs";
 import { storage } from "./storage";
+import { insertUserSchema } from "@shared/schema";
 import { 
   insertTenantSchema,
   insertLandlordSchema,
