@@ -363,8 +363,16 @@ export class MemStorage implements IStorage {
     contracts.forEach(contract => {
       const id = this.currentId++;
       this.contracts.set(id, {
-        ...contract,
         id,
+        landlordId: contract.landlordId,
+        tenantId: contract.tenantId,
+        propertyId: contract.propertyId,
+        monthlyRent: contract.monthlyRent,
+        startDate: contract.startDate,
+        endDate: contract.endDate,
+        deposit: contract.deposit ?? null,
+        isActive: contract.isActive ?? null,
+        terms: contract.terms ?? null,
         createdAt: new Date(contract.startDate)
       });
     });
@@ -532,8 +540,15 @@ export class MemStorage implements IStorage {
     payments.forEach(payment => {
       const id = this.currentId++;
       this.payments.set(id, {
-        ...payment,
         id,
+        status: payment.status,
+        tenantId: payment.tenantId,
+        contractId: payment.contractId,
+        amount: payment.amount,
+        dueDate: payment.dueDate,
+        paidDate: payment.paidDate ?? null,
+        paymentMethod: payment.paymentMethod ?? null,
+        notes: payment.notes ?? null,
         createdAt: new Date(payment.dueDate.getTime() - 30 * 24 * 60 * 60 * 1000)
       });
     });
