@@ -367,8 +367,10 @@ export class MemStorage implements IStorage {
       }
     ];
 
+    const contractIds: number[] = [];
     contracts.forEach(contract => {
       const id = this.currentId++;
+      contractIds.push(id);
       this.contracts.set(id, {
         id,
         landlordId: contract.landlordId,
@@ -390,8 +392,8 @@ export class MemStorage implements IStorage {
       // Historical paid payments - October 2024
       {
         status: "paid",
-        tenantId: 1,
-        contractId: 1,
+        tenantId: tenantIds[0],
+        contractId: contractIds[0],
         amount: "25000",
         dueDate: new Date("2024-10-05"),
         paidDate: new Date("2024-10-03"),
@@ -400,8 +402,8 @@ export class MemStorage implements IStorage {
       },
       {
         status: "paid",
-        tenantId: 2,
-        contractId: 2,
+        tenantId: tenantIds[1],
+        contractId: contractIds[1],
         amount: "22000",
         dueDate: new Date("2024-10-05"),
         paidDate: new Date("2024-10-07"),
@@ -410,8 +412,8 @@ export class MemStorage implements IStorage {
       },
       {
         status: "paid",
-        tenantId: 3,
-        contractId: 3,
+        tenantId: tenantIds[2],
+        contractId: contractIds[2],
         amount: "45000",
         dueDate: new Date("2024-10-01"),
         paidDate: new Date("2024-09-28"),
@@ -420,8 +422,8 @@ export class MemStorage implements IStorage {
       },
       {
         status: "paid",
-        tenantId: 4,
-        contractId: 4,
+        tenantId: tenantIds[3],
+        contractId: contractIds[3],
         amount: "18000",
         dueDate: new Date("2024-10-05"),
         paidDate: new Date("2024-10-05"),
@@ -431,8 +433,8 @@ export class MemStorage implements IStorage {
       // November 2024 payments
       {
         status: "paid",
-        tenantId: 1,
-        contractId: 1,
+        tenantId: tenantIds[0],
+        contractId: contractIds[0],
         amount: "25000",
         dueDate: new Date("2024-11-05"),
         paidDate: new Date("2024-11-03"),
@@ -441,8 +443,8 @@ export class MemStorage implements IStorage {
       },
       {
         status: "paid",
-        tenantId: 3,
-        contractId: 3,
+        tenantId: tenantIds[2],
+        contractId: contractIds[2],
         amount: "45000",
         dueDate: new Date("2024-11-01"),
         paidDate: new Date("2024-10-30"),
@@ -451,8 +453,8 @@ export class MemStorage implements IStorage {
       },
       {
         status: "paid",
-        tenantId: 4,
-        contractId: 4,
+        tenantId: tenantIds[3],
+        contractId: contractIds[3],
         amount: "18000",
         dueDate: new Date("2024-11-05"),
         paidDate: new Date("2024-11-05"),
@@ -462,8 +464,8 @@ export class MemStorage implements IStorage {
       // Late payment in November
       {
         status: "overdue",
-        tenantId: 2,
-        contractId: 2,
+        tenantId: tenantIds[1],
+        contractId: contractIds[1],
         amount: "22000",
         dueDate: new Date("2024-11-05"),
         paidDate: null,
@@ -473,8 +475,8 @@ export class MemStorage implements IStorage {
       // December 2024 - Current period
       {
         status: "pending",
-        tenantId: 1,
-        contractId: 1,
+        tenantId: tenantIds[0],
+        contractId: contractIds[0],
         amount: "25000",
         dueDate: new Date("2024-12-05"),
         paidDate: null,
@@ -482,9 +484,9 @@ export class MemStorage implements IStorage {
         notes: "Aralık ayı kirası - ödeme bekleniyor"
       },
       {
-        status: "pending",
-        tenantId: 3,
-        contractId: 3,
+        status: "overdue",
+        tenantId: tenantIds[2],
+        contractId: contractIds[2],
         amount: "45000",
         dueDate: new Date("2024-12-01"),
         paidDate: null,
@@ -493,8 +495,8 @@ export class MemStorage implements IStorage {
       },
       {
         status: "pending",
-        tenantId: 4,
-        contractId: 4,
+        tenantId: tenantIds[3],
+        contractId: contractIds[3],
         amount: "18000",
         dueDate: new Date("2024-12-05"),
         paidDate: null,
@@ -504,8 +506,8 @@ export class MemStorage implements IStorage {
       // September 2024 - Historical payments
       {
         status: "paid",
-        tenantId: 1,
-        contractId: 1,
+        tenantId: tenantIds[0],
+        contractId: contractIds[0],
         amount: "25000",
         dueDate: new Date("2024-09-05"),
         paidDate: new Date("2024-09-04"),
@@ -514,8 +516,8 @@ export class MemStorage implements IStorage {
       },
       {
         status: "paid",
-        tenantId: 2,
-        contractId: 2,
+        tenantId: tenantIds[1],
+        contractId: contractIds[1],
         amount: "22000",
         dueDate: new Date("2024-09-05"),
         paidDate: new Date("2024-09-20"),
@@ -524,8 +526,8 @@ export class MemStorage implements IStorage {
       },
       {
         status: "paid",
-        tenantId: 3,
-        contractId: 3,
+        tenantId: tenantIds[2],
+        contractId: contractIds[2],
         amount: "45000",
         dueDate: new Date("2024-09-01"),
         paidDate: new Date("2024-08-30"),
@@ -535,8 +537,8 @@ export class MemStorage implements IStorage {
       // Partial payment example
       {
         status: "paid",
-        tenantId: 5,
-        contractId: 5,
+        tenantId: tenantIds[4],
+        contractId: contractIds[4],
         amount: "8000",
         dueDate: new Date("2024-09-01"),
         paidDate: new Date("2024-09-15"),
