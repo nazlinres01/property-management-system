@@ -59,7 +59,12 @@ export default function Landing() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (!response.ok) throw new Error("Giriş yapılamadı");
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Giriş yapılamadı");
+      }
+      
       return response.json();
     },
     onSuccess: () => {
@@ -88,7 +93,12 @@ export default function Landing() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
-      if (!response.ok) throw new Error("Hesap oluşturulamadı");
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Hesap oluşturulamadı");
+      }
+      
       return response.json();
     },
     onSuccess: () => {

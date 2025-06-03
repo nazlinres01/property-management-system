@@ -89,8 +89,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
           userType: user.userType,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Registration error:", error);
+      
+      // Handle Zod validation errors
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ 
+          message: "Geçersiz veri girişi",
+          errors: error.errors 
+        });
+      }
+      
       res.status(500).json({ message: "Hesap oluşturulurken bir hata oluştu" });
     }
   });
