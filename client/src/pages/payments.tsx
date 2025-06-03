@@ -50,6 +50,74 @@ export default function Payments({ onMenuClick }: PaymentsProps) {
     return matchesSearch && payment.status === filterStatus;
   });
 
+  const sortedPayments = [...filteredPayments].sort((a, b) => {
+    let aValue: string | number;
+    let bValue: string | number;
+
+    switch (sortBy) {
+      case "tenant":
+        aValue = a.tenant.name;
+        bValue = b.tenant.name;
+        break;
+      case "amount":
+        aValue = parseFloat(a.amount);
+        bValue = parseFloat(b.amount);
+        break;
+      case "date":
+        aValue = new Date(a.dueDate).getTime();
+        bValue = new Date(b.dueDate).getTime();
+        break;
+      default:
+        aValue = new Date(a.dueDate).getTime();
+        bValue = new Date(b.dueDate).getTime();
+    }
+
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return sortOrder === "asc" 
+        ? aValue.localeCompare(bValue, 'tr-TR')
+        : bValue.localeCompare(aValue, 'tr-TR');
+    }
+
+    return sortOrder === "asc" 
+      ? (aValue as number) - (bValue as number)
+      : (bValue as number) - (aValue as number);
+  });
+
+  const handleSort = (column: "date" | "amount" | "tenant") => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const handleExport = () => {
+    const csvData = sortedPayments.map(payment => ({
+      'Kiracı': payment.tenant.name,
+      'Mülk': payment.contract.property.address,
+      'Tutar': payment.amount,
+      'Vade Tarihi': formatDate(payment.dueDate),
+      'Ödeme Tarihi': payment.paidDate ? formatDate(payment.paidDate) : '-',
+      'Durum': payment.status === 'paid' ? 'Ödendi' : 
+               payment.status === 'overdue' ? 'Gecikme' :
+               payment.status === 'pending' ? 'Bekliyor' : payment.status,
+      'Gecikme Günü': payment.status === 'overdue' ? 
+        Math.floor((new Date().getTime() - new Date(payment.dueDate).getTime()) / (1000 * 60 * 60 * 24)) : 0
+    }));
+
+    const csvContent = [
+      Object.keys(csvData[0] || {}).join(','),
+      ...csvData.map(row => Object.values(row).map(val => `"${val}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `odemeler_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  };
+
   const getStatusBadge = (payment: PaymentWithDetails) => {
     const { text, variant } = getPaymentStatusText(payment.status, payment.dueDate);
     
