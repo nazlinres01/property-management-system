@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Building2, Users, TrendingUp, Shield, CheckCircle, Home, UserCheck, Briefcase, Key } from "lucide-react";
+import { Building2, Users, TrendingUp, Shield, CheckCircle, Home, UserCheck, Briefcase, Key, Building, BarChart3 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertUserSchema } from "@shared/schema";
@@ -278,8 +278,8 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Right Content - Auth Forms */}
-            {(activeTab === "login" || activeTab === "register") && (
+            {/* Right Content - Visual or Auth Forms */}
+            {activeTab === "login" || activeTab === "register" ? (
               <div className="lg:pl-8">
                 <div className="relative">
                   <div className="absolute -top-4 -left-4 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-3xl blur-2xl"></div>
@@ -447,6 +447,118 @@ export default function Landing() {
                       )}
                     </CardContent>
                   </Card>
+                </div>
+              </div>
+            ) : (
+              /* Visual Dashboard Illustration */
+              <div className="lg:pl-8">
+                <div className="relative">
+                  <div className="absolute -top-8 -left-8 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-purple-600/10 rounded-full blur-3xl"></div>
+                  <div className="relative">
+                    <svg 
+                      viewBox="0 0 600 500" 
+                      className="w-full h-auto max-w-2xl mx-auto"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      {/* Dashboard Background */}
+                      <rect x="50" y="60" width="500" height="380" rx="20" fill="url(#dashboardGradient)" stroke="url(#borderGradient)" strokeWidth="2"/>
+                      
+                      {/* Header Bar */}
+                      <rect x="70" y="80" width="460" height="50" rx="8" fill="url(#headerGradient)"/>
+                      <circle cx="100" cy="105" r="8" fill="#3b82f6"/>
+                      <circle cx="120" cy="105" r="8" fill="#10b981"/>
+                      <circle cx="140" cy="105" r="8" fill="#f59e0b"/>
+                      
+                      {/* Stats Cards */}
+                      <rect x="80" y="150" width="120" height="80" rx="12" fill="white" stroke="#e5e7eb" strokeWidth="1"/>
+                      <rect x="220" y="150" width="120" height="80" rx="12" fill="white" stroke="#e5e7eb" strokeWidth="1"/>
+                      <rect x="360" y="150" width="120" height="80" rx="12" fill="white" stroke="#e5e7eb" strokeWidth="1"/>
+                      
+                      {/* Chart Area */}
+                      <rect x="80" y="250" width="200" height="150" rx="12" fill="white" stroke="#e5e7eb" strokeWidth="1"/>
+                      
+                      {/* Chart Lines */}
+                      <polyline points="100,350 120,330 140,340 160,320 180,310 200,300 220,290 240,280 260,270" 
+                                fill="none" stroke="url(#chartGradient)" strokeWidth="3" strokeLinecap="round"/>
+                      
+                      {/* Property List */}
+                      <rect x="300" y="250" width="180" height="150" rx="12" fill="white" stroke="#e5e7eb" strokeWidth="1"/>
+                      <rect x="315" y="265" width="150" height="25" rx="4" fill="#f8fafc"/>
+                      <rect x="315" y="295" width="150" height="25" rx="4" fill="#f8fafc"/>
+                      <rect x="315" y="325" width="150" height="25" rx="4" fill="#f8fafc"/>
+                      <rect x="315" y="355" width="150" height="25" rx="4" fill="#f8fafc"/>
+                      
+                      {/* Notification Bell */}
+                      <circle cx="480" cy="105" r="12" fill="#ef4444"/>
+                      <text x="480" y="109" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">3</text>
+                      
+                      {/* Property Icons */}
+                      <rect x="90" y="160" width="15" height="12" rx="2" fill="#3b82f6"/>
+                      <rect x="230" y="160" width="15" height="12" rx="2" fill="#10b981"/>
+                      <rect x="370" y="160" width="15" height="12" rx="2" fill="#f59e0b"/>
+                      
+                      {/* Text Labels */}
+                      <text x="140" y="185" textAnchor="middle" fill="#374151" fontSize="12" fontWeight="600">Toplam Mülk</text>
+                      <text x="140" y="220" textAnchor="middle" fill="#3b82f6" fontSize="18" fontWeight="bold">127</text>
+                      
+                      <text x="280" y="185" textAnchor="middle" fill="#374151" fontSize="12" fontWeight="600">Aktif Kiracı</text>
+                      <text x="280" y="220" textAnchor="middle" fill="#10b981" fontSize="18" fontWeight="bold">98</text>
+                      
+                      <text x="420" y="185" textAnchor="middle" fill="#374151" fontSize="12" fontWeight="600">Aylık Gelir</text>
+                      <text x="420" y="220" textAnchor="middle" fill="#f59e0b" fontSize="18" fontWeight="bold">₺245K</text>
+                      
+                      {/* Floating Elements */}
+                      <circle cx="520" cy="180" r="25" fill="url(#floatingGradient1)" opacity="0.8"/>
+                      <circle cx="540" cy="320" r="18" fill="url(#floatingGradient2)" opacity="0.6"/>
+                      <circle cx="30" cy="200" r="20" fill="url(#floatingGradient3)" opacity="0.7"/>
+                      
+                      {/* Gradients */}
+                      <defs>
+                        <linearGradient id="dashboardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#f8fafc"/>
+                          <stop offset="100%" stopColor="#f1f5f9"/>
+                        </linearGradient>
+                        <linearGradient id="headerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#3b82f6"/>
+                          <stop offset="100%" stopColor="#6366f1"/>
+                        </linearGradient>
+                        <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#e2e8f0"/>
+                          <stop offset="100%" stopColor="#cbd5e1"/>
+                        </linearGradient>
+                        <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#3b82f6"/>
+                          <stop offset="50%" stopColor="#6366f1"/>
+                          <stop offset="100%" stopColor="#8b5cf6"/>
+                        </linearGradient>
+                        <radialGradient id="floatingGradient1">
+                          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4"/>
+                          <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.1"/>
+                        </radialGradient>
+                        <radialGradient id="floatingGradient2">
+                          <stop offset="0%" stopColor="#10b981" stopOpacity="0.4"/>
+                          <stop offset="100%" stopColor="#10b981" stopOpacity="0.1"/>
+                        </radialGradient>
+                        <radialGradient id="floatingGradient3">
+                          <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.4"/>
+                          <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.1"/>
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    
+                    {/* Floating Action Buttons */}
+                    <div className="absolute top-4 right-4 space-y-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full shadow-lg flex items-center justify-center transform hover:scale-110 transition-all duration-200 animate-pulse">
+                        <Building2 className="h-6 w-6 text-white" />
+                      </div>
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full shadow-lg flex items-center justify-center transform hover:scale-110 transition-all duration-200 animate-pulse" style={{animationDelay: '0.5s'}}>
+                        <Users className="h-6 w-6 text-white" />
+                      </div>
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full shadow-lg flex items-center justify-center transform hover:scale-110 transition-all duration-200 animate-pulse" style={{animationDelay: '1s'}}>
+                        <BarChart3 className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
