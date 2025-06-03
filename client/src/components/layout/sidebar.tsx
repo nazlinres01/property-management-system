@@ -29,7 +29,7 @@ const navigation = [
   { name: "Sözleşmeler", href: "/contracts", icon: FileText },
   { name: "Ödemeler", href: "/payments", icon: CreditCard },
   { name: "Raporlar", href: "/reports", icon: PieChart },
-  { name: "AI & Yapay Zeka", href: "/ai-dashboard", icon: Brain },
+  { name: "Yapay Zeka", href: "/ai-dashboard", icon: Brain },
   { name: "Ayarlar", href: "/settings", icon: Settings },
 ];
 

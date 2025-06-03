@@ -37,10 +37,10 @@ export default function AIDashboard({ onMenuClick }: AIDashboardProps) {
   return (
     <div className="min-h-screen">
       <Topbar
-        title="AI & Yapay Zeka"
+        title="Yapay Zeka"
         onMenuClick={onMenuClick}
         onQuickAction={() => setChatOpen(true)}
-        quickActionLabel="AI Sohbet"
+        quickActionLabel="Akıllı Sohbet"
       />
 
       <div className="p-6 space-y-6">
