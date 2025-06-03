@@ -1,5 +1,6 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
+import { WebSocketServer, WebSocket } from "ws";
 import bcrypt from "bcryptjs";
 import { storage } from "./storage";
 import { insertUserSchema } from "@shared/schema";
@@ -484,5 +485,141 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+  
+  // Setup WebSocket server for live chat
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  // Store active chat connections
+  const chatConnections = new Map<string, WebSocket>();
+  
+  // Simple AI assistant responses (local, no API needed)
+  const aiResponses = {
+    greeting: [
+      "Merhaba! KiraTakip AI asistanınızım. Size nasıl yardımcı olabilirim?",
+      "Selam! Emlak yönetimi konularında size yardımcı olmak için buradayım.",
+      "İyi günler! Kiralama süreçlerinizde nasıl destek olabilirim?"
+    ],
+    property: [
+      "Mülk yönetimi konusunda size yardımcı olabilirim. Hangi konuda bilgi almak istiyorsunuz?",
+      "Emlak portföyünüzü optimize etmek için önerilerim var. Detay için soru sorabilirsiniz.",
+      "Mülk değerlendirmesi ve kiralama stratejileri hakkında bilgi verebilirim."
+    ],
+    tenant: [
+      "Kiracı ilişkileri yönetimi konusunda deneyimliyim. Size nasıl yardımcı olabilirim?",
+      "İyi kiracı seçimi ve iletişim stratejileri hakkında önerilerim var.",
+      "Kiracı memnuniyeti artırmak için pratik çözümler önerebilirim."
+    ],
+    payment: [
+      "Ödeme takibi ve finansal yönetim konularında size destek olabilirim.",
+      "Kira ödemelerini optimize etmek için stratejiler geliştirebiliriz.",
+      "Geciken ödemeler için etkili çözüm yolları önerebilirim."
+    ],
+    legal: [
+      "Emlak hukuku ve kiralama mevzuatı hakkında genel bilgiler verebilirim.",
+      "Sözleşme hazırlama ve yasal süreçler konusunda rehberlik edebilirim.",
+      "Yasal haklar ve sorumluluklar hakkında bilgilendirme yapabilirim."
+    ],
+    default: [
+      "Bu konuda size yardımcı olmaya çalışayım. Daha spesifik bir soru sorabilir misiniz?",
+      "İlginç bir soru! Size en iyi şekilde yardımcı olmak için biraz daha detay verebilir misiniz?",
+      "Emlak yönetimi, kiracı ilişkileri, ödeme takibi gibi konularda uzmanım. Hangi alanda yardım istiyorsunuz?"
+    ]
+  };
+  
+  function getAIResponse(message: string): string {
+    const lowerMessage = message.toLowerCase();
+    
+    if (lowerMessage.includes('merhaba') || lowerMessage.includes('selam') || lowerMessage.includes('hello')) {
+      return aiResponses.greeting[Math.floor(Math.random() * aiResponses.greeting.length)];
+    }
+    
+    if (lowerMessage.includes('mülk') || lowerMessage.includes('emlak') || lowerMessage.includes('property')) {
+      return aiResponses.property[Math.floor(Math.random() * aiResponses.property.length)];
+    }
+    
+    if (lowerMessage.includes('kiracı') || lowerMessage.includes('tenant')) {
+      return aiResponses.tenant[Math.floor(Math.random() * aiResponses.tenant.length)];
+    }
+    
+    if (lowerMessage.includes('ödeme') || lowerMessage.includes('kira') || lowerMessage.includes('payment')) {
+      return aiResponses.payment[Math.floor(Math.random() * aiResponses.payment.length)];
+    }
+    
+    if (lowerMessage.includes('hukuk') || lowerMessage.includes('yasal') || lowerMessage.includes('legal')) {
+      return aiResponses.legal[Math.floor(Math.random() * aiResponses.legal.length)];
+    }
+    
+    return aiResponses.default[Math.floor(Math.random() * aiResponses.default.length)];
+  }
+  
+  wss.on('connection', (ws: WebSocket, req) => {
+    const connectionId = Date.now().toString();
+    chatConnections.set(connectionId, ws);
+    
+    console.log(`Chat connection established: ${connectionId}`);
+    
+    // Send welcome message
+    ws.send(JSON.stringify({
+      type: 'ai_message',
+      message: 'Merhaba! KiraTakip AI asistanınızım. Size nasıl yardımcı olabilirim?',
+      timestamp: new Date().toISOString()
+    }));
+    
+    ws.on('message', (data: Buffer) => {
+      try {
+        const message = JSON.parse(data.toString());
+        
+        if (message.type === 'user_message') {
+          // Echo user message back
+          ws.send(JSON.stringify({
+            type: 'user_message',
+            message: message.message,
+            timestamp: new Date().toISOString()
+          }));
+          
+          // Generate AI response
+          setTimeout(() => {
+            const aiResponse = getAIResponse(message.message);
+            ws.send(JSON.stringify({
+              type: 'ai_message',
+              message: aiResponse,
+              timestamp: new Date().toISOString()
+            }));
+          }, 1000); // 1 second delay for natural feel
+        }
+        
+        if (message.type === 'support_request') {
+          // Handle support requests
+          ws.send(JSON.stringify({
+            type: 'support_message',
+            message: 'Destek talebiniz alındı. Kısa süre içinde size dönüş yapılacaktır.',
+            timestamp: new Date().toISOString()
+          }));
+        }
+        
+      } catch (error) {
+        console.error('WebSocket message error:', error);
+      }
+    });
+    
+    ws.on('close', () => {
+      chatConnections.delete(connectionId);
+      console.log(`Chat connection closed: ${connectionId}`);
+    });
+    
+    ws.on('error', (error) => {
+      console.error('WebSocket error:', error);
+      chatConnections.delete(connectionId);
+    });
+  });
+  
+  // API endpoint for chat history or admin features
+  app.get("/api/chat/status", (req, res) => {
+    res.json({
+      activeConnections: chatConnections.size,
+      status: "online"
+    });
+  });
+  
   return httpServer;
 }
