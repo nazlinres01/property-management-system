@@ -210,6 +210,9 @@ export default function Dashboard({ onMenuClick }: DashboardProps) {
               </CardContent>
             </Card>
 
+            {/* AI Assistant Panel */}
+            <AIPanel onOpenChat={() => setChatOpen(true)} />
+
             {/* Pending Payments */}
             <Card className="border-[hsl(var(--kiratakip-neutral-100))]">
               <CardHeader className="border-b border-[hsl(var(--kiratakip-neutral-100))]">
