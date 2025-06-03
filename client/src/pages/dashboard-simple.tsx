@@ -38,7 +38,7 @@ export default function Dashboard({ onMenuClick, onOpenChat }: DashboardProps) {
     <div className="min-h-screen">
       <Topbar
         title="Dashboard"
-        onMenuClick={onMenuClick}
+        onMenuClick={onMenuClick || (() => {})}
         onQuickAction={() => onOpenChat?.()}
         quickActionLabel="Akıllı Asistan"
       />
