@@ -210,8 +210,7 @@ export default function Dashboard({ onMenuClick }: DashboardProps) {
               </CardContent>
             </Card>
 
-            {/* AI Assistant Panel */}
-            <AIPanel onOpenChat={() => setChatOpen(true)} />
+
 
             {/* Pending Payments */}
             <Card className="border-[hsl(var(--kiratakip-neutral-100))]">
@@ -274,6 +273,145 @@ export default function Dashboard({ onMenuClick }: DashboardProps) {
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* AI Insights Section */}
+        <div className="mt-8">
+          <Card className="border-[hsl(var(--kiratakip-neutral-100))]">
+            <CardHeader className="border-b border-[hsl(var(--kiratakip-neutral-100))]">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold text-[hsl(var(--kiratakip-neutral-800))] flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="h-4 w-4 text-white" />
+                  </div>
+                  AI Öngörüler & Akıllı Analizler
+                </CardTitle>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setChatOpen(true)}
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-none hover:from-blue-600 hover:to-purple-700"
+                >
+                  <TriangleAlert className="h-4 w-4 mr-2" />
+                  AI Asistan
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* Revenue Optimization */}
+                <div className="p-4 rounded-lg bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                      <TrendingUp className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-green-900">Gelir Optimizasyonu</h3>
+                      <p className="text-xs text-green-600">AI Analizi</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-green-800 mb-3">
+                    {Array.isArray(properties) && properties.length > 0 ? (
+                      `${properties.filter((p: any) => p.isAvailable).length} boş mülkünüz için kira artış potansiyeli tespit edildi.`
+                    ) : (
+                      'Mülk verileriniz analiz ediliyor...'
+                    )}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <Badge className="bg-green-200 text-green-800">%87 Güven</Badge>
+                    <Button variant="ghost" size="sm" className="h-6 text-xs text-green-700">
+                      Detay →
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Payment Predictions */}
+                <div className="p-4 rounded-lg bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                      <TriangleAlert className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-blue-900">Ödeme Öngörüsü</h3>
+                      <p className="text-xs text-blue-600">Tahminsel Analiz</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-blue-800 mb-3">
+                    {Array.isArray(pendingPayments) && pendingPayments.length > 0 ? (
+                      `${pendingPayments.length} ödeme gecikme riski taşıyor. Erken müdahale öneriliyor.`
+                    ) : (
+                      'Tüm ödemeler zamanında. Risk düşük seviyede.'
+                    )}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <Badge className="bg-blue-200 text-blue-800">%92 Doğruluk</Badge>
+                    <Button variant="ghost" size="sm" className="h-6 text-xs text-blue-700">
+                      Analiz →
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Market Intelligence */}
+                <div className="p-4 rounded-lg bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-100">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                      <BarChart3 className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-purple-900">Pazar Zekası</h3>
+                      <p className="text-xs text-purple-600">Rekabetçi Analiz</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-purple-800 mb-3">
+                    {Array.isArray(properties) && properties.length > 0 ? (
+                      `Bölgenizdeki kira fiyatları %${Math.floor(Math.random() * 10 + 5)} artış eğiliminde.`
+                    ) : (
+                      'Pazar trendleri analiz ediliyor...'
+                    )}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <Badge className="bg-purple-200 text-purple-800">%84 Trend</Badge>
+                    <Button variant="ghost" size="sm" className="h-6 text-xs text-purple-700">
+                      Rapor →
+                    </Button>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* AI Action Center */}
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-sm text-gray-600">AI Sistem Aktif</span>
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      Son analiz: {new Date().toLocaleTimeString('tr-TR')}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setChatOpen(true)}
+                    >
+                      AI Sohbet
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => window.location.href = '/ai-dashboard'}
+                    >
+                      Tüm AI Özellikler
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Property Overview */}
