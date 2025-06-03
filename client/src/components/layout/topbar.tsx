@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Menu, Search, Bell, Plus } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Menu, Search, Plus } from "lucide-react";
+import NotificationBell from "@/components/notifications/notification-bell";
 
 interface TopbarProps {
   title: string;
@@ -46,19 +46,7 @@ export default function Topbar({
             </div>
 
             {/* Notifications */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="relative text-[hsl(var(--kiratakip-neutral-400))] hover:text-[hsl(var(--kiratakip-neutral-800))]"
-            >
-              <Bell className="h-5 w-5" />
-              <Badge
-                variant="destructive"
-                className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-[hsl(var(--kiratakip-accent))]"
-              >
-                3
-              </Badge>
-            </Button>
+            <NotificationBell />
 
             {/* Quick Action */}
             {onQuickAction && (
