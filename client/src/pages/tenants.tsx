@@ -84,12 +84,16 @@ export default function Tenants({ onMenuClick }: TenantsProps) {
         tenant.phone.includes(searchTerm)
       );
 
-      // Status filter (basic)
+      // Status filter (basic) - using created date as activity indicator
       let matchesStatus = true;
       if (statusFilter === "active") {
-        matchesStatus = tenant.isActive === true;
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        matchesStatus = new Date(tenant.createdAt) > thirtyDaysAgo;
       } else if (statusFilter === "inactive") {
-        matchesStatus = tenant.isActive === false;
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        matchesStatus = new Date(tenant.createdAt) <= thirtyDaysAgo;
       }
 
       // Advanced filters
@@ -110,12 +114,15 @@ export default function Tenants({ onMenuClick }: TenantsProps) {
           matchesAdvanced = matchesAdvanced && tenant.phone.includes(advancedFilters.phone);
         }
 
-        // Status filter (advanced)
+        // Status filter (advanced) - using created date as activity indicator
         if (advancedFilters.status) {
+          const thirtyDaysAgo = new Date();
+          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+          
           if (advancedFilters.status === 'active') {
-            matchesAdvanced = matchesAdvanced && (tenant.isActive === true);
+            matchesAdvanced = matchesAdvanced && (new Date(tenant.createdAt) > thirtyDaysAgo);
           } else if (advancedFilters.status === 'inactive') {
-            matchesAdvanced = matchesAdvanced && (tenant.isActive === false);
+            matchesAdvanced = matchesAdvanced && (new Date(tenant.createdAt) <= thirtyDaysAgo);
           }
         }
       }
