@@ -2,6 +2,16 @@ import { pgTable, text, serial, integer, boolean, timestamp, decimal } from "dri
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  fullName: text("full_name").notNull(),
+  userType: text("user_type").notNull(), // "landlord", "tenant", "agent", "admin"
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const tenants = pgTable("tenants", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -94,17 +104,24 @@ export const insertPaymentSchema = createInsertSchema(payments).omit({
   createdAt: true,
 });
 
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertTenant = z.infer<typeof insertTenantSchema>;
 export type InsertLandlord = z.infer<typeof insertLandlordSchema>;
 export type InsertProperty = z.infer<typeof insertPropertySchema>;
 export type InsertContract = z.infer<typeof insertContractSchema>;
 export type InsertPayment = z.infer<typeof insertPaymentSchema>;
+export type InsertUser = z.infer<typeof insertUserSchema>;
 
 export type Tenant = typeof tenants.$inferSelect;
 export type Landlord = typeof landlords.$inferSelect;
 export type Property = typeof properties.$inferSelect;
 export type Contract = typeof contracts.$inferSelect;
 export type Payment = typeof payments.$inferSelect;
+export type User = typeof users.$inferSelect;
 
 export type PropertyWithDetails = Property & {
   landlord: Landlord;

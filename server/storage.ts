@@ -572,7 +572,7 @@ export class MemStorage implements IStorage {
   }
 
   async getTenants(): Promise<Tenant[]> {
-    return Array.from(this.tenants.values());
+    return Array.from(this.tenants.values()).sort((a, b) => b.id - a.id);
   }
 
   async createTenant(insertTenant: InsertTenant): Promise<Tenant> {
@@ -611,7 +611,7 @@ export class MemStorage implements IStorage {
   }
 
   async getLandlords(): Promise<Landlord[]> {
-    return Array.from(this.landlords.values());
+    return Array.from(this.landlords.values()).sort((a, b) => b.id - a.id);
   }
 
   async createLandlord(insertLandlord: InsertLandlord): Promise<Landlord> {
@@ -650,7 +650,7 @@ export class MemStorage implements IStorage {
   }
 
   async getProperties(): Promise<Property[]> {
-    return Array.from(this.properties.values());
+    return Array.from(this.properties.values()).sort((a, b) => b.id - a.id);
   }
 
   async getPropertiesWithDetails(): Promise<PropertyWithDetails[]> {
@@ -732,7 +732,7 @@ export class MemStorage implements IStorage {
   }
 
   async getContracts(): Promise<Contract[]> {
-    return Array.from(this.contracts.values());
+    return Array.from(this.contracts.values()).sort((a, b) => b.id - a.id);
   }
 
   async getContractsWithDetails(): Promise<ContractWithDetails[]> {
@@ -836,7 +836,7 @@ export class MemStorage implements IStorage {
   }
 
   async getPayments(): Promise<Payment[]> {
-    return Array.from(this.payments.values());
+    return Array.from(this.payments.values()).sort((a, b) => b.id - a.id);
   }
 
   async getPaymentsWithDetails(): Promise<PaymentWithDetails[]> {
