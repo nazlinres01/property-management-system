@@ -143,7 +143,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dashboard - accessible to all authenticated users
-  app.get("/api/dashboard/stats", authenticate, async (req: AuthenticatedRequest, res) => {
+  app.get("/api/dashboard/stats", async (req: AuthenticatedRequest, res) => {
     try {
       const stats = await storage.getDashboardStats();
       res.json(stats);

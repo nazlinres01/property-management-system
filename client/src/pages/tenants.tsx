@@ -15,7 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Eye, Mail, Phone, Search } from "lucide-react";
+import { Edit, Eye, Mail, Phone, Search, Filter, Download, ArrowUpDown } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getInitials, formatDate } from "@/lib/utils";
 import type { Tenant } from "@shared/schema";
 
@@ -27,16 +28,78 @@ export default function Tenants({ onMenuClick }: TenantsProps) {
   const [showModal, setShowModal] = useState(false);
   const [editingTenant, setEditingTenant] = useState<Tenant | undefined>();
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState<"name" | "date">("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const { data: tenants, isLoading } = useQuery({
     queryKey: ["/api/tenants"],
   });
 
-  const filteredTenants = tenants?.filter((tenant: Tenant) =>
+  const filteredTenants = (tenants || []).filter((tenant: Tenant) =>
     tenant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     tenant.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     tenant.phone.includes(searchTerm)
-  ) || [];
+  );
+
+  const sortedTenants = [...filteredTenants].sort((a, b) => {
+    let aValue: string | number;
+    let bValue: string | number;
+
+    switch (sortBy) {
+      case "name":
+        aValue = a.name;
+        bValue = b.name;
+        break;
+      case "date":
+        aValue = new Date(a.createdAt).getTime();
+        bValue = new Date(b.createdAt).getTime();
+        break;
+      default:
+        aValue = a.name;
+        bValue = b.name;
+    }
+
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return sortOrder === "asc" 
+        ? aValue.localeCompare(bValue, 'tr-TR')
+        : bValue.localeCompare(aValue, 'tr-TR');
+    }
+
+    return sortOrder === "asc" 
+      ? (aValue as number) - (bValue as number)
+      : (bValue as number) - (aValue as number);
+  });
+
+  const handleSort = (column: "name" | "date") => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const handleExport = () => {
+    const csvData = sortedTenants.map(tenant => ({
+      'Ad Soyad': tenant.name,
+      'Email': tenant.email,
+      'Telefon': tenant.phone,
+      'TC Kimlik': tenant.nationalId,
+      'Adres': tenant.address || '-',
+      'Kayıt Tarihi': formatDate(tenant.createdAt)
+    }));
+
+    const csvContent = [
+      Object.keys(csvData[0] || {}).join(','),
+      ...csvData.map(row => Object.values(row).map(val => `"${val}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `kiracilar_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  };
 
   const handleEdit = (tenant: Tenant) => {
     setEditingTenant(tenant);
@@ -65,7 +128,28 @@ export default function Tenants({ onMenuClick }: TenantsProps) {
       <div className="p-6">
         {/* Search and Filters */}
         <Card className="mb-6 border-[hsl(var(--kiratakip-neutral-100))]">
-          <CardContent className="p-6">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg font-semibold text-[hsl(var(--kiratakip-neutral-800))]">
+                Kiracı Yönetimi
+              </CardTitle>
+              <div className="flex space-x-2">
+                <Button variant="outline" size="sm" className="text-[hsl(var(--kiratakip-neutral-600))]">
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filtrele
+                </Button>
+                <Button 
+                  onClick={handleExport}
+                  className="bg-[hsl(var(--kiratakip-primary))] text-white hover:bg-[hsl(var(--kiratakip-primary))]/90"
+                  size="sm"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Dışa Aktar
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
             <div className="flex items-center space-x-4">
               <div className="relative flex-1 max-w-sm">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[hsl(var(--kiratakip-neutral-400))] h-4 w-4" />
@@ -77,7 +161,7 @@ export default function Tenants({ onMenuClick }: TenantsProps) {
                 />
               </div>
               <div className="text-sm text-[hsl(var(--kiratakip-neutral-400))]">
-                {isLoading ? "Yükleniyor..." : `${filteredTenants.length} kiracı bulundu`}
+                {isLoading ? "Yükleniyor..." : `${sortedTenants.length} kiracı bulundu`}
               </div>
             </div>
           </CardContent>
@@ -121,7 +205,7 @@ export default function Tenants({ onMenuClick }: TenantsProps) {
                         </div>
                       </TableCell>
                     </TableRow>
-                  ) : filteredTenants.length === 0 ? (
+                  ) : sortedTenants.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={5} className="text-center py-8">
                         <div className="text-[hsl(var(--kiratakip-neutral-400))]">
@@ -130,7 +214,7 @@ export default function Tenants({ onMenuClick }: TenantsProps) {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredTenants.map((tenant: Tenant) => (
+                    sortedTenants.map((tenant: Tenant) => (
                       <TableRow
                         key={tenant.id}
                         className="hover:bg-[hsl(var(--kiratakip-neutral-50))] transition-colors"
