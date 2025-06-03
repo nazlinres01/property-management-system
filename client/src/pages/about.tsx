@@ -425,9 +425,9 @@ export default function About() {
                 </Button>
                 <Button 
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 py-3 rounded-xl flex items-center"
+                  className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-blue-600 font-semibold px-8 py-3 rounded-xl"
                 >
-                  <span>Demo Talep Edin</span>
+                  Demo Talep Edin
                 </Button>
               </div>
             </CardContent>
