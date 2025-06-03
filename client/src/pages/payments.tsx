@@ -13,7 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Calendar, DollarSign, CheckCircle } from "lucide-react";
+import { Search, Calendar, DollarSign, CheckCircle, Filter, Download, ArrowUpDown } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatCurrency, formatDate, getPaymentStatusText } from "@/lib/utils";
 import type { PaymentWithDetails } from "@shared/schema";
 
@@ -24,6 +25,8 @@ interface PaymentsProps {
 export default function Payments({ onMenuClick }: PaymentsProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "paid" | "overdue">("all");
+  const [sortBy, setSortBy] = useState<"date" | "amount" | "tenant">("date");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const { data: payments, isLoading } = useQuery({
     queryKey: ["/api/payments"],
@@ -37,7 +40,7 @@ export default function Payments({ onMenuClick }: PaymentsProps) {
     queryKey: ["/api/payments/overdue"],
   });
 
-  const filteredPayments = payments?.filter((payment: PaymentWithDetails) => {
+  const filteredPayments = (payments || []).filter((payment: PaymentWithDetails) => {
     const matchesSearch = 
       payment.tenant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       payment.contract.property.address.toLowerCase().includes(searchTerm.toLowerCase());
@@ -45,7 +48,7 @@ export default function Payments({ onMenuClick }: PaymentsProps) {
     if (filterStatus === "all") return matchesSearch;
     
     return matchesSearch && payment.status === filterStatus;
-  }) || [];
+  });
 
   const getStatusBadge = (payment: PaymentWithDetails) => {
     const { text, variant } = getPaymentStatusText(payment.status, payment.dueDate);
@@ -64,10 +67,10 @@ export default function Payments({ onMenuClick }: PaymentsProps) {
     );
   };
 
-  const totalPaidAmount = payments?.filter((p: PaymentWithDetails) => p.status === "paid")
-    .reduce((sum, p) => sum + parseFloat(p.amount), 0) || 0;
+  const totalPaidAmount = (payments || []).filter((p: PaymentWithDetails) => p.status === "paid")
+    .reduce((sum: number, p: PaymentWithDetails) => sum + parseFloat(p.amount), 0);
 
-  const totalPendingAmount = pendingPayments?.reduce((sum, p) => sum + parseFloat(p.amount), 0) || 0;
+  const totalPendingAmount = (pendingPayments || []).reduce((sum: number, p: any) => sum + parseFloat(p.amount), 0);
 
   return (
     <div className="min-h-screen">

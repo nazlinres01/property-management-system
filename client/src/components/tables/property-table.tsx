@@ -34,7 +34,7 @@ export default function PropertyTable() {
     queryKey: ["/api/properties"],
   });
 
-  const filteredProperties = properties?.filter((property: PropertyWithDetails) => {
+  const filteredProperties = (properties || []).filter((property: PropertyWithDetails) => {
     const matchesSearch = 
       property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
       property.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -90,6 +90,35 @@ export default function PropertyTable() {
     }
   };
 
+  const handleExport = () => {
+    const csvData = sortedProperties.map(property => ({
+      'Adres': property.address,
+      'Tip': property.type,
+      'Alan (m²)': property.area,
+      'Kat': property.floor,
+      'Aylık Kira': property.monthlyRent,
+      'Durum': property.isAvailable ? 'Müsait' : 'Dolu',
+      'Ev Sahibi': property.landlord.name,
+      'Kiracı': property.tenant?.name || 'Yok',
+      'Kiracı Telefon': property.tenant?.phone || '-',
+      'Son Ödeme Tarihi': property.lastPayment ? formatDate(property.lastPayment.dueDate) : '-',
+      'Ödeme Durumu': property.lastPayment?.status === 'paid' ? 'Ödendi' : 
+                     property.lastPayment?.status === 'overdue' ? 'Gecikme' :
+                     property.lastPayment?.status === 'pending' ? 'Bekliyor' : '-'
+    }));
+
+    const csvContent = [
+      Object.keys(csvData[0] || {}).join(','),
+      ...csvData.map(row => Object.values(row).map(val => `"${val}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `mulkler_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  };
+
   const getStatusBadge = (property: PropertyWithDetails) => {
     if (property.isAvailable) {
       return (
@@ -133,6 +162,7 @@ export default function PropertyTable() {
               Filtrele
             </Button>
             <Button 
+              onClick={handleExport}
               className="bg-[hsl(var(--kiratakip-primary))] text-white hover:bg-[hsl(var(--kiratakip-primary))]/90"
               size="sm"
             >
