@@ -88,6 +88,340 @@ export class MemStorage implements IStorage {
     this.contracts = new Map();
     this.payments = new Map();
     this.currentId = 1;
+    this.seedData();
+  }
+
+  private seedData() {
+    // Sample Landlords - Different types of property owners
+    const landlords = [
+      {
+        name: "Mehmet Öztürk",
+        email: "mehmet.ozturk@email.com",
+        phone: "+90 532 123 4567",
+        nationalId: "12345678901",
+        address: "Beşiktaş, İstanbul",
+        bankAccount: "TR33 0006 1005 1978 6457 8413 26",
+        taxNumber: "1234567890"
+      },
+      {
+        name: "Fatma Yılmaz",
+        email: "fatma.yilmaz@email.com",
+        phone: "+90 533 234 5678",
+        nationalId: "23456789012",
+        address: "Kadıköy, İstanbul",
+        bankAccount: "TR64 0004 6007 8888 8006 2330 01",
+        taxNumber: "2345678901"
+      },
+      {
+        name: "Ahmet Emlak A.Ş.",
+        email: "info@ahmetemlak.com",
+        phone: "+90 212 345 6789",
+        nationalId: "34567890123",
+        address: "Şişli, İstanbul",
+        bankAccount: "TR52 0001 2009 4520 0058 0015 02",
+        taxNumber: "3456789012"
+      },
+      {
+        name: "Zeynep Koç",
+        email: "zeynep.koc@gmail.com",
+        phone: "+90 534 345 6789",
+        nationalId: "45678901234",
+        address: "Çankaya, Ankara",
+        bankAccount: "TR89 0001 5001 5800 7300 0135 64",
+        taxNumber: "4567890123"
+      }
+    ];
+
+    landlords.forEach(landlord => {
+      const id = this.currentId++;
+      this.landlords.set(id, {
+        ...landlord,
+        id,
+        createdAt: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000)
+      });
+    });
+
+    // Sample Tenants - Different demographics
+    const tenants = [
+      {
+        name: "Ali Demir",
+        email: "ali.demir@email.com",
+        phone: "+90 535 456 7890",
+        nationalId: "56789012345",
+        address: "Beşiktaş, İstanbul",
+        emergencyContact: "Ayşe Demir",
+        emergencyPhone: "+90 532 987 6543"
+      },
+      {
+        name: "Elif Kaya",
+        email: "elif.kaya@email.com",
+        phone: "+90 536 567 8901",
+        nationalId: "67890123456",
+        address: "Kadıköy, İstanbul",
+        emergencyContact: "Murat Kaya",
+        emergencyPhone: "+90 533 876 5432"
+      },
+      {
+        name: "Burak Şahin",
+        email: "burak.sahin@email.com",
+        phone: "+90 537 678 9012",
+        nationalId: "78901234567",
+        address: "Şişli, İstanbul",
+        emergencyContact: "Seda Şahin",
+        emergencyPhone: "+90 534 765 4321"
+      },
+      {
+        name: "Merve Yıldız",
+        email: "merve.yildiz@email.com",
+        phone: "+90 538 789 0123",
+        nationalId: "89012345678",
+        address: "Çankaya, Ankara",
+        emergencyContact: "Can Yıldız",
+        emergencyPhone: "+90 535 654 3210"
+      },
+      {
+        name: "Emre Arslan",
+        email: "emre.arslan@email.com",
+        phone: "+90 539 890 1234",
+        nationalId: "90123456789",
+        address: "Konak, İzmir",
+        emergencyContact: "Deniz Arslan",
+        emergencyPhone: "+90 536 543 2109"
+      }
+    ];
+
+    tenants.forEach(tenant => {
+      const id = this.currentId++;
+      this.tenants.set(id, {
+        ...tenant,
+        id,
+        createdAt: new Date(Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000)
+      });
+    });
+
+    // Sample Properties - Various types and locations
+    const properties = [
+      {
+        type: "Daire",
+        address: "Barbaros Bulvarı No:45 D:8, Beşiktaş/İstanbul",
+        landlordId: 1,
+        monthlyRent: "25000",
+        area: 120,
+        floor: 8,
+        hasBalcony: true,
+        hasParking: true,
+        isAvailable: false,
+        deposit: "50000",
+        description: "Deniz manzaralı, merkezi konumda 2+1 daire. Metro ve otobüs duraklarına yakın."
+      },
+      {
+        type: "Daire",
+        address: "Bağdat Caddesi No:123 D:4, Kadıköy/İstanbul",
+        landlordId: 2,
+        monthlyRent: "22000",
+        area: 100,
+        floor: 4,
+        hasBalcony: true,
+        hasParking: false,
+        isAvailable: false,
+        deposit: "44000",
+        description: "Cadde üzeri, eşyalı 2+1 daire. Alışveriş merkezlerine yürüme mesafesi."
+      },
+      {
+        type: "Ofis",
+        address: "Büyükdere Caddesi No:78 Kat:12, Şişli/İstanbul",
+        landlordId: 3,
+        monthlyRent: "45000",
+        area: 200,
+        floor: 12,
+        hasBalcony: false,
+        hasParking: true,
+        isAvailable: false,
+        deposit: "90000",
+        description: "Plaza içinde modern ofis. 24 saat güvenlik ve resepsiyon hizmeti."
+      },
+      {
+        type: "Daire",
+        address: "Tunalı Hilmi Caddesi No:67 D:6, Çankaya/Ankara",
+        landlordId: 4,
+        monthlyRent: "18000",
+        area: 110,
+        floor: 6,
+        hasBalcony: true,
+        hasParking: true,
+        isAvailable: false,
+        deposit: "36000",
+        description: "Merkezi konumda 3+1 daire. Doğalgaz, asansör, güvenlik mevcut."
+      },
+      {
+        type: "Daire",
+        address: "Alsancak Mah. 1453 Sokak No:12 D:3, Konak/İzmir",
+        landlordId: 1,
+        monthlyRent: "16000",
+        area: 85,
+        floor: 3,
+        hasBalcony: true,
+        hasParking: false,
+        isAvailable: true,
+        deposit: "32000",
+        description: "Denize yakın 2+1 daire. Klimalı, beyaz eşyalı."
+      },
+      {
+        type: "Dükkan",
+        address: "İstiklal Caddesi No:234, Beyoğlu/İstanbul",
+        landlordId: 2,
+        monthlyRent: "35000",
+        area: 60,
+        floor: 0,
+        hasBalcony: false,
+        hasParking: false,
+        isAvailable: true,
+        deposit: "70000",
+        description: "Yoğun cadde üzeri dükkan. Yüksek insan trafiği, ticaret için ideal."
+      }
+    ];
+
+    properties.forEach(property => {
+      const id = this.currentId++;
+      this.properties.set(id, {
+        ...property,
+        id,
+        createdAt: new Date(Date.now() - Math.random() * 120 * 24 * 60 * 60 * 1000)
+      });
+    });
+
+    // Sample Contracts - Active rentals
+    const contracts = [
+      {
+        landlordId: 1,
+        tenantId: 1,
+        propertyId: 1,
+        monthlyRent: "25000",
+        startDate: new Date("2024-03-01"),
+        endDate: new Date("2025-03-01"),
+        deposit: "50000",
+        isActive: true,
+        terms: "12 aylık kira sözleşmesi. Kira ödemeleri her ayın 5'inde yapılacaktır."
+      },
+      {
+        landlordId: 2,
+        tenantId: 2,
+        propertyId: 2,
+        monthlyRent: "22000",
+        startDate: new Date("2024-01-15"),
+        endDate: new Date("2025-01-15"),
+        deposit: "44000",
+        isActive: true,
+        terms: "12 aylık kira sözleşmesi. Eşyalar kiracı sorumluluğundadır."
+      },
+      {
+        landlordId: 3,
+        tenantId: 3,
+        propertyId: 3,
+        monthlyRent: "45000",
+        startDate: new Date("2024-02-01"),
+        endDate: new Date("2026-02-01"),
+        deposit: "90000",
+        isActive: true,
+        terms: "24 aylık ticari kira sözleşmesi. KDV dahil değildir."
+      },
+      {
+        landlordId: 4,
+        tenantId: 4,
+        propertyId: 4,
+        monthlyRent: "18000",
+        startDate: new Date("2024-04-01"),
+        endDate: new Date("2025-04-01"),
+        deposit: "36000",
+        isActive: true,
+        terms: "12 aylık kira sözleşmesi. Aidat ev sahibi tarafından ödenecektir."
+      }
+    ];
+
+    contracts.forEach(contract => {
+      const id = this.currentId++;
+      this.contracts.set(id, {
+        ...contract,
+        id,
+        createdAt: new Date(contract.startDate)
+      });
+    });
+
+    // Sample Payments - Mix of paid, pending, and overdue
+    const payments = [
+      // Paid payments
+      {
+        status: "paid",
+        tenantId: 1,
+        contractId: 1,
+        amount: "25000",
+        dueDate: new Date("2024-11-05"),
+        paidDate: new Date("2024-11-03"),
+        paymentMethod: "Banka Transferi",
+        notes: "Zamanında ödendi"
+      },
+      {
+        status: "paid",
+        tenantId: 2,
+        contractId: 2,
+        amount: "22000",
+        dueDate: new Date("2024-11-05"),
+        paidDate: new Date("2024-11-05"),
+        paymentMethod: "EFT",
+        notes: null
+      },
+      {
+        status: "paid",
+        tenantId: 3,
+        contractId: 3,
+        amount: "45000",
+        dueDate: new Date("2024-11-01"),
+        paidDate: new Date("2024-10-30"),
+        paymentMethod: "Çek",
+        notes: "Erken ödeme yapıldı"
+      },
+      // Pending payments
+      {
+        status: "pending",
+        tenantId: 4,
+        contractId: 4,
+        amount: "18000",
+        dueDate: new Date("2024-12-05"),
+        paidDate: null,
+        paymentMethod: null,
+        notes: "Ödeme bekleniyor"
+      },
+      {
+        status: "pending",
+        tenantId: 1,
+        contractId: 1,
+        amount: "25000",
+        dueDate: new Date("2024-12-05"),
+        paidDate: null,
+        paymentMethod: null,
+        notes: null
+      },
+      // Overdue payment
+      {
+        status: "overdue",
+        tenantId: 2,
+        contractId: 2,
+        amount: "22000",
+        dueDate: new Date("2024-11-25"),
+        paidDate: null,
+        paymentMethod: null,
+        notes: "Geç ödeme - kiracı ile iletişim kuruldu"
+      }
+    ];
+
+    payments.forEach(payment => {
+      const id = this.currentId++;
+      this.payments.set(id, {
+        ...payment,
+        id,
+        createdAt: new Date(payment.dueDate.getTime() - 30 * 24 * 60 * 60 * 1000)
+      });
+    });
   }
 
   // Tenants

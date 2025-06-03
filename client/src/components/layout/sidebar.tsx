@@ -62,7 +62,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
                   KiraTakip
                 </h1>
                 <p className="text-sm text-[hsl(var(--kiratakip-neutral-400))]">
-                  Kiracı & Ev Sahibi Sistemi
+                  Emlak Yönetim Sistemi
                 </p>
               </div>
             </div>
@@ -88,18 +88,15 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
                 key={item.name}
                 href={item.href}
                 onClick={() => window.innerWidth < 1024 && onToggle()}
+                className={cn(
+                  "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors font-medium",
+                  isActive
+                    ? "bg-[hsl(var(--kiratakip-primary))] text-white"
+                    : "hover:bg-[hsl(var(--kiratakip-neutral-50))] text-[hsl(var(--kiratakip-neutral-400))]"
+                )}
               >
-                <a
-                  className={cn(
-                    "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors font-medium",
-                    isActive
-                      ? "bg-[hsl(var(--kiratakip-primary))] text-white"
-                      : "hover:bg-[hsl(var(--kiratakip-neutral-50))] text-[hsl(var(--kiratakip-neutral-400))]"
-                  )}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span>{item.name}</span>
-                </a>
+                <Icon className="w-5 h-5" />
+                <span>{item.name}</span>
               </Link>
             );
           })}
