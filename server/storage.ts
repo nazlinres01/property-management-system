@@ -102,8 +102,14 @@ export class MemStorage implements IStorage {
   async createTenant(insertTenant: InsertTenant): Promise<Tenant> {
     const id = this.currentId++;
     const tenant: Tenant = {
-      ...insertTenant,
       id,
+      name: insertTenant.name,
+      email: insertTenant.email,
+      phone: insertTenant.phone,
+      nationalId: insertTenant.nationalId,
+      address: insertTenant.address ?? null,
+      emergencyContact: insertTenant.emergencyContact ?? null,
+      emergencyPhone: insertTenant.emergencyPhone ?? null,
       createdAt: new Date(),
     };
     this.tenants.set(id, tenant);
@@ -135,8 +141,14 @@ export class MemStorage implements IStorage {
   async createLandlord(insertLandlord: InsertLandlord): Promise<Landlord> {
     const id = this.currentId++;
     const landlord: Landlord = {
-      ...insertLandlord,
       id,
+      name: insertLandlord.name,
+      email: insertLandlord.email,
+      phone: insertLandlord.phone,
+      nationalId: insertLandlord.nationalId,
+      address: insertLandlord.address ?? null,
+      bankAccount: insertLandlord.bankAccount ?? null,
+      taxNumber: insertLandlord.taxNumber ?? null,
       createdAt: new Date(),
     };
     this.landlords.set(id, landlord);

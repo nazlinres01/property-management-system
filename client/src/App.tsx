@@ -14,21 +14,6 @@ import Reports from "@/pages/reports";
 import Sidebar from "@/components/layout/sidebar";
 import { useState } from "react";
 
-function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={Dashboard} />
-      <Route path="/tenants" component={Tenants} />
-      <Route path="/landlords" component={Landlords} />
-      <Route path="/properties" component={Properties} />
-      <Route path="/contracts" component={Contracts} />
-      <Route path="/payments" component={Payments} />
-      <Route path="/reports" component={Reports} />
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
-
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -38,7 +23,16 @@ function App() {
         <div className="min-h-screen bg-[hsl(var(--kiratakip-surface))]">
           <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
           <main className="lg:ml-64 min-h-screen">
-            <Router />
+            <Switch>
+              <Route path="/" component={() => <Dashboard onMenuClick={() => setSidebarOpen(!sidebarOpen)} />} />
+              <Route path="/tenants" component={() => <Tenants onMenuClick={() => setSidebarOpen(!sidebarOpen)} />} />
+              <Route path="/landlords" component={() => <Landlords onMenuClick={() => setSidebarOpen(!sidebarOpen)} />} />
+              <Route path="/properties" component={() => <Properties onMenuClick={() => setSidebarOpen(!sidebarOpen)} />} />
+              <Route path="/contracts" component={() => <Contracts onMenuClick={() => setSidebarOpen(!sidebarOpen)} />} />
+              <Route path="/payments" component={() => <Payments onMenuClick={() => setSidebarOpen(!sidebarOpen)} />} />
+              <Route path="/reports" component={() => <Reports onMenuClick={() => setSidebarOpen(!sidebarOpen)} />} />
+              <Route component={NotFound} />
+            </Switch>
           </main>
           <Toaster />
         </div>
