@@ -11,9 +11,139 @@ import {
   insertPaymentSchema,
 } from "@shared/schema";
 
+// Extend session data interface
+declare module 'express-session' {
+  interface SessionData {
+    userId: number;
+  }
+}
+
+// Session middleware for user authentication
+interface AuthenticatedRequest extends Request {
+  user?: {
+    id: number;
+    email: string;
+    fullName: string;
+    userType: string;
+  };
+}
+
+// Authentication middleware
+const authenticate = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  const userId = (req.session as any)?.userId;
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const user = await storage.getUser(userId);
+  if (!user || !user.isActive) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  req.user = {
+    id: user.id,
+    email: user.email,
+    fullName: user.fullName,
+    userType: user.userType,
+  };
+  next();
+};
+
+// Role-based authorization middleware
+const authorize = (roles: string[]) => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    if (!req.user || !roles.includes(req.user.userType)) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    next();
+  };
+};
+
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Dashboard
-  app.get("/api/dashboard/stats", async (req, res) => {
+  // Authentication routes
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const userData = insertUserSchema.parse(req.body);
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(userData.email);
+      if (existingUser) {
+        return res.status(400).json({ message: "Bu email adresi zaten kullanımda" });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      
+      // Create user
+      const user = await storage.createUser({
+        ...userData,
+        password: hashedPassword,
+      });
+
+      res.status(201).json({
+        message: "Hesap başarıyla oluşturuldu",
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          userType: user.userType,
+        },
+      });
+    } catch (error) {
+      console.error("Registration error:", error);
+      res.status(500).json({ message: "Hesap oluşturulurken bir hata oluştu" });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      // Find user
+      const user = await storage.getUserByEmail(email);
+      if (!user || !user.isActive) {
+        return res.status(401).json({ message: "Geçersiz email veya şifre" });
+      }
+
+      // Verify password
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Geçersiz email veya şifre" });
+      }
+
+      // Store user session
+      req.session.userId = user.id;
+
+      res.json({
+        message: "Giriş başarılı",
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          userType: user.userType,
+        },
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ message: "Giriş yapılırken bir hata oluştu" });
+    }
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Çıkış yapılırken bir hata oluştu" });
+      }
+      res.json({ message: "Çıkış başarılı" });
+    });
+  });
+
+  app.get("/api/auth/me", authenticate, (req: AuthenticatedRequest, res) => {
+    res.json({ user: req.user });
+  });
+
+  // Dashboard - accessible to all authenticated users
+  app.get("/api/dashboard/stats", authenticate, async (req: AuthenticatedRequest, res) => {
     try {
       const stats = await storage.getDashboardStats();
       res.json(stats);

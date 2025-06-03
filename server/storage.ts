@@ -585,12 +585,8 @@ export class MemStorage implements IStorage {
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    for (const user of this.users.values()) {
-      if (user.email === email) {
-        return user;
-      }
-    }
-    return undefined;
+    const usersArray = Array.from(this.users.values());
+    return usersArray.find(user => user.email === email);
   }
 
   async getUsers(): Promise<User[]> {
@@ -601,7 +597,11 @@ export class MemStorage implements IStorage {
     const id = this.currentId++;
     const user: User = {
       id,
-      ...insertUser,
+      email: insertUser.email,
+      password: insertUser.password,
+      fullName: insertUser.fullName,
+      userType: insertUser.userType,
+      isActive: insertUser.isActive ?? true,
       createdAt: new Date(),
     };
     this.users.set(id, user);
