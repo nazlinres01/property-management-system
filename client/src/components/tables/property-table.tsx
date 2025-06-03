@@ -98,9 +98,9 @@ export default function PropertyTable() {
       // Status filter (basic)
       let matchesStatus = true;
       if (statusFilter === "available") {
-        matchesStatus = property.isAvailable;
+        matchesStatus = Boolean(property.isAvailable);
       } else if (statusFilter === "occupied") {
-        matchesStatus = !property.isAvailable;
+        matchesStatus = !Boolean(property.isAvailable);
       }
 
       // Advanced filters
@@ -119,18 +119,18 @@ export default function PropertyTable() {
         // Status filter (advanced)
         if (advancedFilters.status) {
           if (advancedFilters.status === 'available') {
-            matchesAdvanced = matchesAdvanced && property.isAvailable;
+            matchesAdvanced = matchesAdvanced && (property.isAvailable === true);
           } else if (advancedFilters.status === 'occupied') {
-            matchesAdvanced = matchesAdvanced && !property.isAvailable;
+            matchesAdvanced = matchesAdvanced && (property.isAvailable === false);
           }
         }
 
         // Rent range filters
         if (advancedFilters.minRent) {
-          matchesAdvanced = matchesAdvanced && parseFloat(property.rent) >= parseFloat(advancedFilters.minRent);
+          matchesAdvanced = matchesAdvanced && parseFloat(property.monthlyRent) >= parseFloat(advancedFilters.minRent);
         }
         if (advancedFilters.maxRent) {
-          matchesAdvanced = matchesAdvanced && parseFloat(property.rent) <= parseFloat(advancedFilters.maxRent);
+          matchesAdvanced = matchesAdvanced && parseFloat(property.monthlyRent) <= parseFloat(advancedFilters.maxRent);
         }
       }
 
@@ -247,10 +247,6 @@ export default function PropertyTable() {
             Mülk Durumu
           </CardTitle>
           <div className="flex space-x-2">
-            <Button variant="outline" size="sm" className="text-[hsl(var(--kiratakip-neutral-600))]">
-              <Filter className="h-4 w-4 mr-2" />
-              Filtrele
-            </Button>
             <Button 
               onClick={handleExport}
               className="bg-[hsl(var(--kiratakip-primary))] text-white hover:bg-[hsl(var(--kiratakip-primary))]/90"
@@ -262,18 +258,26 @@ export default function PropertyTable() {
           </div>
         </div>
         
-        {/* Search and Filters */}
-        <div className="flex items-center space-x-4 mt-4">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[hsl(var(--kiratakip-neutral-400))] h-4 w-4" />
-            <Input
-              placeholder="Mülk ara..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 border-[hsl(var(--kiratakip-neutral-100))]"
-            />
-          </div>
-          
+        {/* Quick Search */}
+        <QuickSearch
+          placeholder="Mülk ara... (adres, tip, ev sahibi, kiracı)"
+          onSearch={setSearchTerm}
+          className="mb-4"
+        />
+
+        {/* Advanced Filter Component */}
+        <AdvancedFilter
+          title="Mülk"
+          filters={filterConfig}
+          onFilterChange={setAdvancedFilters}
+          onReset={() => setAdvancedFilters({})}
+          activeFilters={advancedFilters}
+          isOpen={showAdvancedFilter}
+          onToggle={() => setShowAdvancedFilter(!showAdvancedFilter)}
+        />
+
+        {/* Basic Status Filter */}
+        <div className="flex items-center space-x-4 mb-4">
           <Select value={statusFilter} onValueChange={(value: "all" | "available" | "occupied") => setStatusFilter(value)}>
             <SelectTrigger className="w-[180px] border-[hsl(var(--kiratakip-neutral-100))]">
               <SelectValue placeholder="Durum filtrele" />
