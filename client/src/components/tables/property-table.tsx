@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Edit, Eye, Mail, Search, ArrowUpDown, Filter, Download } from "lucide-react";
+import AdvancedFilter from "@/components/filters/advanced-filter";
+import QuickSearch from "@/components/filters/quick-search";
+import { Edit, Eye, Mail, Search, ArrowUpDown, Filter, Download, RefreshCw } from "lucide-react";
 import { formatCurrency, formatDate, getInitials } from "@/lib/utils";
 import type { PropertyWithDetails } from "@shared/schema";
 
@@ -29,24 +31,112 @@ export default function PropertyTable() {
   const [statusFilter, setStatusFilter] = useState<"all" | "available" | "occupied">("all");
   const [sortBy, setSortBy] = useState<"address" | "rent" | "date">("address");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
+  const [advancedFilters, setAdvancedFilters] = useState<Record<string, any>>({});
 
   const { data: properties, isLoading } = useQuery({
     queryKey: ["/api/properties"],
   });
 
-  const filteredProperties = (properties || []).filter((property: PropertyWithDetails) => {
-    const matchesSearch = 
-      property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.landlord.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (property.tenant && property.tenant.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  // Define filter configuration
+  const filterConfig = [
+    {
+      type: 'text' as const,
+      label: 'Adres',
+      key: 'address',
+      placeholder: 'Adres ara...'
+    },
+    {
+      type: 'select' as const,
+      label: 'Mülk Tipi',
+      key: 'type',
+      options: [
+        { value: 'Daire', label: 'Daire' },
+        { value: 'Villa', label: 'Villa' },
+        { value: 'Ofis', label: 'Ofis' },
+        { value: 'Dükkan', label: 'Dükkan' }
+      ],
+      placeholder: 'Mülk tipi seçin'
+    },
+    {
+      type: 'select' as const,
+      label: 'Durum',
+      key: 'status',
+      options: [
+        { value: 'available', label: 'Boş' },
+        { value: 'occupied', label: 'Dolu' }
+      ],
+      placeholder: 'Durum seçin'
+    },
+    {
+      type: 'number' as const,
+      label: 'Min Kira',
+      key: 'minRent',
+      placeholder: 'Minimum kira'
+    },
+    {
+      type: 'number' as const,
+      label: 'Max Kira',
+      key: 'maxRent',
+      placeholder: 'Maksimum kira'
+    }
+  ];
 
-    if (statusFilter === "all") return matchesSearch;
-    if (statusFilter === "available") return matchesSearch && property.isAvailable;
-    if (statusFilter === "occupied") return matchesSearch && !property.isAvailable;
+  // Apply filters using useMemo for performance
+  const filteredProperties = useMemo(() => {
+    if (!Array.isArray(properties)) return [];
+    
+    return properties.filter((property: PropertyWithDetails) => {
+      // Quick search filter
+      const matchesSearch = !searchTerm || (
+        property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.landlord.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (property.tenant && property.tenant.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
 
-    return matchesSearch;
-  }) || [];
+      // Status filter (basic)
+      let matchesStatus = true;
+      if (statusFilter === "available") {
+        matchesStatus = property.isAvailable;
+      } else if (statusFilter === "occupied") {
+        matchesStatus = !property.isAvailable;
+      }
+
+      // Advanced filters
+      let matchesAdvanced = true;
+      if (Object.keys(advancedFilters).length > 0) {
+        // Address filter
+        if (advancedFilters.address) {
+          matchesAdvanced = matchesAdvanced && property.address.toLowerCase().includes(advancedFilters.address.toLowerCase());
+        }
+
+        // Type filter
+        if (advancedFilters.type) {
+          matchesAdvanced = matchesAdvanced && property.type === advancedFilters.type;
+        }
+
+        // Status filter (advanced)
+        if (advancedFilters.status) {
+          if (advancedFilters.status === 'available') {
+            matchesAdvanced = matchesAdvanced && property.isAvailable;
+          } else if (advancedFilters.status === 'occupied') {
+            matchesAdvanced = matchesAdvanced && !property.isAvailable;
+          }
+        }
+
+        // Rent range filters
+        if (advancedFilters.minRent) {
+          matchesAdvanced = matchesAdvanced && parseFloat(property.rent) >= parseFloat(advancedFilters.minRent);
+        }
+        if (advancedFilters.maxRent) {
+          matchesAdvanced = matchesAdvanced && parseFloat(property.rent) <= parseFloat(advancedFilters.maxRent);
+        }
+      }
+
+      return matchesSearch && matchesStatus && matchesAdvanced;
+    });
+  }, [properties, searchTerm, statusFilter, advancedFilters]);
 
   const sortedProperties = [...filteredProperties].sort((a, b) => {
     let aValue: string | number;
