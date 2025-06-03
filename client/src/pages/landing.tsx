@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Building2, Users, TrendingUp, Shield, CheckCircle, Home, UserCheck, Briefcase, Key } from "lucide-react";
@@ -12,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertUserSchema } from "@shared/schema";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
 const loginSchema = z.object({
@@ -31,7 +29,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 type RegisterForm = z.infer<typeof registerSchema>;
 
 export default function Landing() {
-  const [activeTab, setActiveTab] = useState("login");
+  const [activeTab, setActiveTab] = useState("");
   const { toast } = useToast();
 
   const loginForm = useForm<LoginForm>({
@@ -155,6 +153,7 @@ export default function Landing() {
         <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-purple-600/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-indigo-400/10 to-blue-600/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
       </div>
+
       {/* Header */}
       <header className="relative z-50 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-lg shadow-gray-900/5 sticky top-0">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -187,8 +186,22 @@ export default function Landing() {
                 Hakkımızda
               </Button>
               <Button 
+                onClick={() => setActiveTab("login")}
+                variant="outline"
+                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold px-6 py-2 rounded-xl transition-all duration-200"
+              >
+                Giriş Yap
+              </Button>
+              <Button 
+                onClick={() => setActiveTab("register")}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              >
+                Kayıt Ol
+              </Button>
+              <Button 
                 onClick={() => window.location.href = "/dashboard"}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                variant="ghost"
+                className="text-gray-600 hover:text-gray-900 font-medium px-6"
               >
                 Dashboard'a Git
               </Button>
@@ -271,228 +284,244 @@ export default function Landing() {
                 </div>
               </div>
             </div>
-          </div>
 
             {/* Right Content - Auth Forms */}
-            <div className="lg:pl-8">
-              <div className="relative">
-                <div className="absolute -top-4 -left-4 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-3xl blur-2xl"></div>
-                <Card className="relative w-full max-w-lg mx-auto bg-white/95 backdrop-blur-xl border-0 shadow-2xl shadow-gray-900/10 rounded-3xl overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50"></div>
-                  <CardHeader className="relative text-center pb-6 pt-12 px-8">
-                    <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                      <Key className="h-10 w-10 text-white" />
-                    </div>
-                    <CardTitle className="text-3xl font-black text-gray-900 mb-2">
-                      Hoş Geldiniz
-                    </CardTitle>
-                    <CardDescription className="text-gray-600 text-lg">
-                      Profesyonel emlak yönetimi deneyimini başlatın
-                    </CardDescription>
-                  </CardHeader>
-                <CardContent className="relative px-8 pb-12">
-                  <Tabs value={activeTab} onValueChange={setActiveTab}>
-                    <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100/80 rounded-2xl p-1 h-14">
-                      <TabsTrigger 
-                        value="login"
-                        className="rounded-xl font-semibold text-base data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-blue-600"
+            {(activeTab === "login" || activeTab === "register") && (
+              <div className="lg:pl-8">
+                <div className="relative">
+                  <div className="absolute -top-4 -left-4 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-3xl blur-2xl"></div>
+                  <Card className="relative w-full max-w-lg mx-auto bg-white/95 backdrop-blur-xl border-0 shadow-2xl shadow-gray-900/10 rounded-3xl overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50"></div>
+                    <CardHeader className="relative text-center pb-6 pt-12 px-8">
+                      <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                        <Key className="h-10 w-10 text-white" />
+                      </div>
+                      <CardTitle className="text-3xl font-black text-gray-900 mb-2">
+                        {activeTab === "login" ? "Giriş Yap" : "Hesap Oluştur"}
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 text-lg">
+                        {activeTab === "login" 
+                          ? "Hesabınıza erişim sağlayın" 
+                          : "Profesyonel emlak yönetimi deneyimini başlatın"
+                        }
+                      </CardDescription>
+                      <Button
+                        variant="ghost"
+                        onClick={() => setActiveTab("")}
+                        className="absolute top-4 right-4 h-8 w-8 p-0 text-gray-500 hover:text-gray-700"
                       >
-                        Giriş Yap
-                      </TabsTrigger>
-                      <TabsTrigger 
-                        value="register"
-                        className="rounded-xl font-semibold text-base data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-blue-600"
-                      >
-                        Kayıt Ol
-                      </TabsTrigger>
-                    </TabsList>
+                        ✕
+                      </Button>
+                    </CardHeader>
+                    <CardContent className="relative px-8 pb-12">
+                      {activeTab === "login" && (
+                        <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-6">
+                          <div className="space-y-2">
+                            <Label htmlFor="email" className="text-gray-700 font-semibold">Email</Label>
+                            <Input
+                              id="email"
+                              type="email"
+                              placeholder="ornek@email.com"
+                              className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                              {...loginForm.register("email")}
+                            />
+                            {loginForm.formState.errors.email && (
+                              <p className="text-sm text-red-500">
+                                {loginForm.formState.errors.email.message}
+                              </p>
+                            )}
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="password" className="text-gray-700 font-semibold">Şifre</Label>
+                            <Input
+                              id="password"
+                              type="password"
+                              placeholder="********"
+                              className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                              {...loginForm.register("password")}
+                            />
+                            {loginForm.formState.errors.password && (
+                              <p className="text-sm text-red-500">
+                                {loginForm.formState.errors.password.message}
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            type="submit"
+                            className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                            disabled={loginMutation.isPending}
+                          >
+                            {loginMutation.isPending ? "Giriş yapılıyor..." : "Giriş Yap"}
+                          </Button>
+                        </form>
+                      )}
 
-                    <TabsContent value="login">
-                      <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="email">Email</Label>
-                          <Input
-                            id="email"
-                            type="email"
-                            placeholder="ornek@email.com"
-                            {...loginForm.register("email")}
-                          />
-                          {loginForm.formState.errors.email && (
-                            <p className="text-sm text-red-500">
-                              {loginForm.formState.errors.email.message}
-                            </p>
-                          )}
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="password">Şifre</Label>
-                          <Input
-                            id="password"
-                            type="password"
-                            placeholder="********"
-                            {...loginForm.register("password")}
-                          />
-                          {loginForm.formState.errors.password && (
-                            <p className="text-sm text-red-500">
-                              {loginForm.formState.errors.password.message}
-                            </p>
-                          )}
-                        </div>
-                        <Button
-                          type="submit"
-                          className="w-full bg-[hsl(var(--kiratakip-primary))] hover:bg-[hsl(var(--kiratakip-primary))]/90"
-                          disabled={loginMutation.isPending}
-                        >
-                          {loginMutation.isPending ? "Giriş yapılıyor..." : "Giriş Yap"}
-                        </Button>
-                      </form>
-                    </TabsContent>
-
-                    <TabsContent value="register">
-                      <form onSubmit={registerForm.handleSubmit(onRegister)} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="fullName">Ad Soyad</Label>
-                          <Input
-                            id="fullName"
-                            placeholder="Adınız Soyadınız"
-                            {...registerForm.register("fullName")}
-                          />
-                          {registerForm.formState.errors.fullName && (
-                            <p className="text-sm text-red-500">
-                              {registerForm.formState.errors.fullName.message}
-                            </p>
-                          )}
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="regEmail">Email</Label>
-                          <Input
-                            id="regEmail"
-                            type="email"
-                            placeholder="ornek@email.com"
-                            {...registerForm.register("email")}
-                          />
-                          {registerForm.formState.errors.email && (
-                            <p className="text-sm text-red-500">
-                              {registerForm.formState.errors.email.message}
-                            </p>
-                          )}
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="userType">Kullanıcı Tipi</Label>
-                          <Select onValueChange={(value) => registerForm.setValue("userType", value)}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Kullanıcı tipinizi seçin" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {userTypes.map((type) => (
-                                <SelectItem key={type.value} value={type.value}>
-                                  <div className="flex items-center space-x-2">
-                                    <type.icon className="h-4 w-4" />
-                                    <div>
-                                      <p className="font-medium">{type.label}</p>
-                                      <p className="text-xs text-gray-500">{type.desc}</p>
+                      {activeTab === "register" && (
+                        <form onSubmit={registerForm.handleSubmit(onRegister)} className="space-y-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="fullName" className="text-gray-700 font-semibold">Ad Soyad</Label>
+                            <Input
+                              id="fullName"
+                              placeholder="Adınız Soyadınız"
+                              className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                              {...registerForm.register("fullName")}
+                            />
+                            {registerForm.formState.errors.fullName && (
+                              <p className="text-sm text-red-500">
+                                {registerForm.formState.errors.fullName.message}
+                              </p>
+                            )}
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="regEmail" className="text-gray-700 font-semibold">Email</Label>
+                            <Input
+                              id="regEmail"
+                              type="email"
+                              placeholder="ornek@email.com"
+                              className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                              {...registerForm.register("email")}
+                            />
+                            {registerForm.formState.errors.email && (
+                              <p className="text-sm text-red-500">
+                                {registerForm.formState.errors.email.message}
+                              </p>
+                            )}
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="userType" className="text-gray-700 font-semibold">Kullanıcı Tipi</Label>
+                            <Select onValueChange={(value) => registerForm.setValue("userType", value)}>
+                              <SelectTrigger className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500">
+                                <SelectValue placeholder="Kullanıcı tipinizi seçin" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {userTypes.map((type) => (
+                                  <SelectItem key={type.value} value={type.value}>
+                                    <div className="flex items-center space-x-2">
+                                      <type.icon className="h-4 w-4" />
+                                      <div>
+                                        <p className="font-medium">{type.label}</p>
+                                        <p className="text-xs text-gray-500">{type.desc}</p>
+                                      </div>
                                     </div>
-                                  </div>
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          {registerForm.formState.errors.userType && (
-                            <p className="text-sm text-red-500">
-                              {registerForm.formState.errors.userType.message}
-                            </p>
-                          )}
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="regPassword">Şifre</Label>
-                          <Input
-                            id="regPassword"
-                            type="password"
-                            placeholder="********"
-                            {...registerForm.register("password")}
-                          />
-                          {registerForm.formState.errors.password && (
-                            <p className="text-sm text-red-500">
-                              {registerForm.formState.errors.password.message}
-                            </p>
-                          )}
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="confirmPassword">Şifre Tekrar</Label>
-                          <Input
-                            id="confirmPassword"
-                            type="password"
-                            placeholder="********"
-                            {...registerForm.register("confirmPassword")}
-                          />
-                          {registerForm.formState.errors.confirmPassword && (
-                            <p className="text-sm text-red-500">
-                              {registerForm.formState.errors.confirmPassword.message}
-                            </p>
-                          )}
-                        </div>
-                        <Button
-                          type="submit"
-                          className="w-full bg-[hsl(var(--kiratakip-primary))] hover:bg-[hsl(var(--kiratakip-primary))]/90"
-                          disabled={registerMutation.isPending}
-                        >
-                          {registerMutation.isPending ? "Hesap oluşturuluyor..." : "Hesap Oluştur"}
-                        </Button>
-                      </form>
-                    </TabsContent>
-                  </Tabs>
-                </CardContent>
-              </Card>
-            </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            {registerForm.formState.errors.userType && (
+                              <p className="text-sm text-red-500">
+                                {registerForm.formState.errors.userType.message}
+                              </p>
+                            )}
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="regPassword" className="text-gray-700 font-semibold">Şifre</Label>
+                            <Input
+                              id="regPassword"
+                              type="password"
+                              placeholder="********"
+                              className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                              {...registerForm.register("password")}
+                            />
+                            {registerForm.formState.errors.password && (
+                              <p className="text-sm text-red-500">
+                                {registerForm.formState.errors.password.message}
+                              </p>
+                            )}
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="confirmPassword" className="text-gray-700 font-semibold">Şifre Tekrar</Label>
+                            <Input
+                              id="confirmPassword"
+                              type="password"
+                              placeholder="********"
+                              className="h-12 rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                              {...registerForm.register("confirmPassword")}
+                            />
+                            {registerForm.formState.errors.confirmPassword && (
+                              <p className="text-sm text-red-500">
+                                {registerForm.formState.errors.confirmPassword.message}
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            type="submit"
+                            className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                            disabled={registerMutation.isPending}
+                          >
+                            {registerMutation.isPending ? "Hesap oluşturuluyor..." : "Hesap Oluştur"}
+                          </Button>
+                        </form>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white/50">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold text-[hsl(var(--kiratakip-neutral-800))] mb-4">
-              Neden KiraTakip?
+      <section className="py-24 bg-white/80 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h3 className="text-5xl font-black text-gray-900 mb-6">
+              Enterprise Seviye Özellikler
             </h3>
-            <p className="text-lg text-[hsl(var(--kiratakip-neutral-600))] max-w-2xl mx-auto">
-              Modern emlak yönetimi için ihtiyacınız olan tüm araçlar tek platformda
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Kurumsal müşterilerimizin güvendiği teknoloji altyapısı ile emlak portföyünüzü yönetin
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="text-center border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-shadow">
-                <CardHeader>
-                  <div className="w-16 h-16 bg-gradient-to-r from-[hsl(var(--kiratakip-primary))] to-[hsl(var(--kiratakip-secondary))] rounded-full flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <CardTitle className="text-xl text-[hsl(var(--kiratakip-neutral-800))]">
-                    {feature.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-[hsl(var(--kiratakip-neutral-600))]">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
+              <div key={index} className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+                <Card className="relative text-center border-0 shadow-xl bg-white/90 backdrop-blur-sm hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 rounded-3xl overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50"></div>
+                  <CardHeader className="relative pt-12 pb-6">
+                    <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <feature.icon className="h-10 w-10 text-white" />
+                    </div>
+                    <CardTitle className="text-2xl font-black text-gray-900 mb-3">
+                      {feature.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="relative pb-12">
+                    <p className="text-gray-600 leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-[hsl(var(--kiratakip-neutral-800))] text-white py-12">
-        <div className="container mx-auto px-6">
+      <footer className="bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center">
-            <div className="flex items-center justify-center space-x-3 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-[hsl(var(--kiratakip-primary))] to-[hsl(var(--kiratakip-secondary))] rounded-lg flex items-center justify-center">
-                <Key className="h-5 w-5 text-white" />
+            <div className="flex items-center justify-center space-x-4 mb-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <Key className="h-8 w-8 text-white" />
               </div>
-              <h4 className="text-xl font-bold">KiraTakip</h4>
+              <div>
+                <h4 className="text-3xl font-black bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+                  KiraTakip
+                </h4>
+                <p className="text-blue-200 text-sm font-medium tracking-wide">PROFESSIONAL EDITION</p>
+              </div>
             </div>
-            <p className="text-gray-400">
-              Emlak yönetiminde güvenilir çözüm ortağınız
+            <p className="text-blue-100 text-lg max-w-2xl mx-auto leading-relaxed">
+              Fortune 500 şirketlerinin güvendiği teknoloji ile emlak portföyünüzü dijitalleştirin.
+              Türkiye'nin en kapsamlı emlak yönetim platformu.
             </p>
+            <div className="mt-8 pt-8 border-t border-blue-800/50">
+              <p className="text-blue-300 text-sm">
+                © 2024 KiraTakip Professional Edition. Tüm hakları saklıdır.
+              </p>
+            </div>
           </div>
         </div>
       </footer>
