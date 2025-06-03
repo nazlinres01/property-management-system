@@ -198,13 +198,6 @@ export default function Landing() {
               >
                 Kayıt Ol
               </Button>
-              <Button 
-                onClick={() => window.location.href = "/dashboard"}
-                variant="ghost"
-                className="text-gray-600 hover:text-gray-900 font-medium px-6"
-              >
-                Dashboard'a Git
-              </Button>
             </div>
           </div>
         </div>
