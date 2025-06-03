@@ -17,10 +17,10 @@ import { formatCurrency } from "@/lib/utils";
 
 interface DashboardProps {
   onMenuClick?: () => void;
+  onOpenChat?: () => void;
 }
 
-export default function Dashboard({ onMenuClick }: DashboardProps) {
-  const [chatOpen, setChatOpen] = useState(false);
+export default function Dashboard({ onMenuClick, onOpenChat }: DashboardProps) {
 
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["/api/dashboard/stats"],
@@ -39,7 +39,7 @@ export default function Dashboard({ onMenuClick }: DashboardProps) {
       <Topbar
         title="Dashboard"
         onMenuClick={onMenuClick}
-        onQuickAction={() => setChatOpen(true)}
+        onQuickAction={() => onOpenChat?.()}
         quickActionLabel="AI Asistan"
       />
 
@@ -132,7 +132,7 @@ export default function Dashboard({ onMenuClick }: DashboardProps) {
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={() => setChatOpen(true)}
+                onClick={() => onOpenChat?.()}
                 className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-none hover:from-blue-600 hover:to-purple-700"
               >
                 <MessageSquare className="h-4 w-4 mr-2" />
@@ -235,7 +235,7 @@ export default function Dashboard({ onMenuClick }: DashboardProps) {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => setChatOpen(true)}
+                    onClick={() => onOpenChat?.()}
                   >
                     AI Sohbet
                   </Button>
@@ -271,7 +271,7 @@ export default function Dashboard({ onMenuClick }: DashboardProps) {
                 </Button>
                 <Button 
                   variant="outline"
-                  onClick={() => setChatOpen(true)}
+                  onClick={() => onOpenChat?.()}
                 >
                   AI Asistan ile Konuş
                 </Button>

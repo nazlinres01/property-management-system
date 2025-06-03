@@ -43,7 +43,10 @@ function App() {
             <div className="min-h-screen bg-[hsl(var(--kiratakip-surface))]">
               <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
               <main className="lg:ml-64 min-h-screen">
-                <Dashboard onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+                <Dashboard 
+                  onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+                  onOpenChat={() => setChatOpen(true)}
+                />
               </main>
             </div>
           </Route>
