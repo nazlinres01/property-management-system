@@ -40,7 +40,7 @@ export default function Dashboard({ onMenuClick, onOpenChat }: DashboardProps) {
         title="Dashboard"
         onMenuClick={onMenuClick}
         onQuickAction={() => onOpenChat?.()}
-        quickActionLabel="AI Asistan"
+        quickActionLabel="Akıllı Asistan"
       />
 
       <div className="p-6 space-y-6">
@@ -127,7 +127,7 @@ export default function Dashboard({ onMenuClick, onOpenChat }: DashboardProps) {
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <Brain className="h-4 w-4 text-white" />
                 </div>
-                AI Öngörüler & Akıllı Analizler
+                Akıllı Öngörüler & Analizler
               </CardTitle>
               <Button 
                 variant="outline" 
@@ -151,7 +151,7 @@ export default function Dashboard({ onMenuClick, onOpenChat }: DashboardProps) {
                   </div>
                   <div>
                     <h3 className="font-semibold text-green-900">Gelir Optimizasyonu</h3>
-                    <p className="text-xs text-green-600">AI Analizi</p>
+                    <p className="text-xs text-green-600">Akıllı Analiz</p>
                   </div>
                 </div>
                 <p className="text-sm text-green-800 mb-3">
@@ -225,7 +225,7 @@ export default function Dashboard({ onMenuClick, onOpenChat }: DashboardProps) {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-sm text-gray-600">AI Sistem Aktif</span>
+                    <span className="text-sm text-gray-600">Akıllı Sistem Aktif</span>
                   </div>
                   <div className="text-sm text-gray-500">
                     Son analiz: {new Date().toLocaleTimeString('tr-TR')}
@@ -237,14 +237,14 @@ export default function Dashboard({ onMenuClick, onOpenChat }: DashboardProps) {
                     size="sm"
                     onClick={() => onOpenChat?.()}
                   >
-                    AI Sohbet
+                    Akıllı Sohbet
                   </Button>
                   <Button 
                     variant="outline" 
                     size="sm"
                     onClick={() => window.location.href = '/ai-dashboard'}
                   >
-                    Tüm AI Özellikler
+                    Tüm Akıllı Özellikler
                   </Button>
                 </div>
               </div>
