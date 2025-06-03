@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Landing from "@/pages/landing";
 import NotFound from "@/pages/not-found";
-import Dashboard from "@/pages/dashboard";
+import Dashboard from "@/pages/dashboard-simple";
 import Tenants from "@/pages/tenants";
 import Landlords from "@/pages/landlords";
 import Properties from "@/pages/properties";

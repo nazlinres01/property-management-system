@@ -61,7 +61,7 @@ export default function Dashboard({ onMenuClick }: DashboardProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatsCard
             title="Toplam Kiracı"
-            value={statsLoading ? "..." : stats?.totalTenants || 0}
+            value={statsLoading ? "..." : (stats as any)?.totalTenants || 0}
             change={{
               value: "+12%",
               label: "bu ay",
