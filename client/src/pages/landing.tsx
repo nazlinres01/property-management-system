@@ -67,9 +67,8 @@ export default function Landing() {
     onSuccess: () => {
       toast({
         title: "Başarılı",
-        description: "Giriş yapıldı. Yönlendiriliyorsunuz...",
+        description: "Giriş yapıldı. Dashboard'a yönlendiriliyorsunuz...",
       });
-      // In real app, redirect to dashboard
       setTimeout(() => {
         window.location.href = "/dashboard";
       }, 1000);
@@ -154,13 +153,21 @@ export default function Landing() {
       <header className="bg-white/80 backdrop-blur-sm border-b border-[hsl(var(--kiratakip-neutral-100))] sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-[hsl(var(--kiratakip-primary))] to-[hsl(var(--kiratakip-secondary))] rounded-lg flex items-center justify-center">
-                <Key className="h-6 w-6 text-white" />
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-[hsl(var(--kiratakip-primary))] to-[hsl(var(--kiratakip-secondary))] rounded-lg flex items-center justify-center">
+                  <Key className="h-6 w-6 text-white" />
+                </div>
+                <h1 className="text-2xl font-bold text-[hsl(var(--kiratakip-neutral-800))]">
+                  KiraTakip
+                </h1>
               </div>
-              <h1 className="text-2xl font-bold text-[hsl(var(--kiratakip-neutral-800))]">
-                KiraTakip
-              </h1>
+              <Button 
+                onClick={() => window.location.href = "/dashboard"}
+                className="bg-[hsl(var(--kiratakip-primary))] hover:bg-[hsl(var(--kiratakip-primary))]/90 text-white"
+              >
+                Dashboard'a Git
+              </Button>
             </div>
           </div>
         </div>
