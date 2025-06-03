@@ -299,10 +299,10 @@ export default function Features() {
                 </Button>
                 <Button 
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-blue-600 font-semibold px-8 py-3 rounded-xl flex items-center"
+                  className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-blue-600 font-semibold px-8 py-3 rounded-xl"
                 >
                   <Mail className="h-4 w-4 mr-2" />
-                  <span>İletişime Geçin</span>
+                  İletişime Geçin
                 </Button>
               </div>
             </CardContent>
