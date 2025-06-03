@@ -107,29 +107,41 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
         {/* User Profile */}
         <div className="absolute bottom-4 left-4 right-4">
-          <div className="bg-[hsl(var(--kiratakip-neutral-50))] rounded-lg p-4">
-            <div className="flex items-center space-x-3">
+          <div className="bg-[hsl(var(--kiratakip-neutral-50))] rounded-lg p-4 hover:bg-[hsl(var(--kiratakip-neutral-100))] transition-colors cursor-pointer">
+            <Link href="/settings" className="flex items-center space-x-3">
               <Avatar className="w-10 h-10">
                 <AvatarFallback className="bg-[hsl(var(--kiratakip-primary))] text-white font-semibold">
-                  AK
+                  NE
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm text-[hsl(var(--kiratakip-neutral-800))] truncate">
-                  Ahmet Kaya
+                  Nazlı Nur Esmeray
                 </p>
                 <p className="text-xs text-[hsl(var(--kiratakip-neutral-400))]">
                   Sistem Yöneticisi
                 </p>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-[hsl(var(--kiratakip-neutral-400))] hover:text-[hsl(var(--kiratakip-neutral-800))]"
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
-            </div>
+              <Settings className="h-4 w-4 text-[hsl(var(--kiratakip-neutral-400))] hover:text-[hsl(var(--kiratakip-neutral-800))]" />
+            </Link>
+          </div>
+          
+          {/* Logout Button */}
+          <div className="mt-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full text-[hsl(var(--kiratakip-neutral-400))] hover:text-red-600 hover:bg-red-50"
+              onClick={() => {
+                fetch("/api/auth/logout", { method: "POST" })
+                  .then(() => {
+                    window.location.href = "/";
+                  });
+              }}
+            >
+              <X className="h-4 w-4 mr-2" />
+              Çıkış Yap
+            </Button>
           </div>
         </div>
       </div>
