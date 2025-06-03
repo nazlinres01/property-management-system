@@ -92,6 +92,7 @@ export class MemStorage implements IStorage {
   }
 
   private seedData() {
+    console.log("Starting data seeding...");
     // Sample Landlords - Different types of property owners
     const landlords = [
       {
@@ -376,6 +377,7 @@ export class MemStorage implements IStorage {
         createdAt: new Date(contract.startDate)
       });
     });
+    console.log("Contracts loaded:", this.contracts.size);
 
     // Sample Payments - Comprehensive payment history
     const payments = [
@@ -552,6 +554,8 @@ export class MemStorage implements IStorage {
         createdAt: new Date(payment.dueDate.getTime() - 30 * 24 * 60 * 60 * 1000)
       });
     });
+    console.log("Payments loaded:", this.payments.size);
+    console.log("Data seeding completed. Total IDs used:", this.currentId);
   }
 
   // Tenants
