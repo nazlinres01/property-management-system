@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Topbar from "@/components/layout/topbar";
 import TenantModal from "@/components/modals/tenant-modal";
@@ -15,6 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import AdvancedFilter from "@/components/filters/advanced-filter";
+import QuickSearch from "@/components/filters/quick-search";
 import { Edit, Eye, Mail, Phone, Search, Filter, Download, ArrowUpDown } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getInitials, formatDate } from "@/lib/utils";
@@ -28,18 +30,99 @@ export default function Tenants({ onMenuClick }: TenantsProps) {
   const [showModal, setShowModal] = useState(false);
   const [editingTenant, setEditingTenant] = useState<Tenant | undefined>();
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "date">("name");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+  const [sortBy, setSortBy] = useState<"name" | "email" | "date">("name");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
+  const [advancedFilters, setAdvancedFilters] = useState<Record<string, any>>({});
 
   const { data: tenants, isLoading } = useQuery({
     queryKey: ["/api/tenants"],
   });
 
-  const filteredTenants = (tenants || []).filter((tenant: Tenant) =>
-    tenant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    tenant.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    tenant.phone.includes(searchTerm)
-  );
+  // Define filter configuration for tenants
+  const filterConfig = [
+    {
+      type: 'text' as const,
+      label: 'İsim',
+      key: 'name',
+      placeholder: 'İsim ara...'
+    },
+    {
+      type: 'text' as const,
+      label: 'E-posta',
+      key: 'email',
+      placeholder: 'E-posta ara...'
+    },
+    {
+      type: 'text' as const,
+      label: 'Telefon',
+      key: 'phone',
+      placeholder: 'Telefon ara...'
+    },
+    {
+      type: 'select' as const,
+      label: 'Durum',
+      key: 'status',
+      options: [
+        { value: 'active', label: 'Aktif' },
+        { value: 'inactive', label: 'Pasif' }
+      ],
+      placeholder: 'Durum seçin'
+    }
+  ];
+
+  // Apply filters using useMemo for performance
+  const filteredTenants = useMemo(() => {
+    if (!Array.isArray(tenants)) return [];
+    
+    return tenants.filter((tenant: Tenant) => {
+      // Quick search filter
+      const matchesSearch = !searchTerm || (
+        tenant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tenant.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tenant.phone.includes(searchTerm)
+      );
+
+      // Status filter (basic)
+      let matchesStatus = true;
+      if (statusFilter === "active") {
+        matchesStatus = tenant.isActive === true;
+      } else if (statusFilter === "inactive") {
+        matchesStatus = tenant.isActive === false;
+      }
+
+      // Advanced filters
+      let matchesAdvanced = true;
+      if (Object.keys(advancedFilters).length > 0) {
+        // Name filter
+        if (advancedFilters.name) {
+          matchesAdvanced = matchesAdvanced && tenant.name.toLowerCase().includes(advancedFilters.name.toLowerCase());
+        }
+
+        // Email filter
+        if (advancedFilters.email) {
+          matchesAdvanced = matchesAdvanced && tenant.email.toLowerCase().includes(advancedFilters.email.toLowerCase());
+        }
+
+        // Phone filter
+        if (advancedFilters.phone) {
+          matchesAdvanced = matchesAdvanced && tenant.phone.includes(advancedFilters.phone);
+        }
+
+        // Status filter (advanced)
+        if (advancedFilters.status) {
+          if (advancedFilters.status === 'active') {
+            matchesAdvanced = matchesAdvanced && (tenant.isActive === true);
+          } else if (advancedFilters.status === 'inactive') {
+            matchesAdvanced = matchesAdvanced && (tenant.isActive === false);
+          }
+        }
+      }
+
+      return matchesSearch && matchesStatus && matchesAdvanced;
+    });
+  }, [tenants, searchTerm, statusFilter, advancedFilters]);
 
   const sortedTenants = [...filteredTenants].sort((a, b) => {
     let aValue: string | number;
@@ -150,16 +233,37 @@ export default function Tenants({ onMenuClick }: TenantsProps) {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center space-x-4">
-              <div className="relative flex-1 max-w-sm">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[hsl(var(--kiratakip-neutral-400))] h-4 w-4" />
-                <Input
-                  placeholder="Kiracı ara..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-[hsl(var(--kiratakip-neutral-100))]"
-                />
-              </div>
+            {/* Quick Search */}
+            <QuickSearch
+              placeholder="Kiracı ara... (isim, e-posta, telefon)"
+              onSearch={setSearchTerm}
+              className="mb-4"
+            />
+
+            {/* Advanced Filter Component */}
+            <AdvancedFilter
+              title="Kiracı"
+              filters={filterConfig}
+              onFilterChange={setAdvancedFilters}
+              onReset={() => setAdvancedFilters({})}
+              activeFilters={advancedFilters}
+              isOpen={showAdvancedFilter}
+              onToggle={() => setShowAdvancedFilter(!showAdvancedFilter)}
+            />
+
+            {/* Basic Status Filter */}
+            <div className="flex items-center justify-between">
+              <Select value={statusFilter} onValueChange={(value: "all" | "active" | "inactive") => setStatusFilter(value)}>
+                <SelectTrigger className="w-[180px] border-[hsl(var(--kiratakip-neutral-100))]">
+                  <SelectValue placeholder="Durum filtrele" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tüm Kiracılar</SelectItem>
+                  <SelectItem value="active">Aktif</SelectItem>
+                  <SelectItem value="inactive">Pasif</SelectItem>
+                </SelectContent>
+              </Select>
+
               <div className="text-sm text-[hsl(var(--kiratakip-neutral-400))]">
                 {isLoading ? "Yükleniyor..." : `${sortedTenants.length} kiracı bulundu`}
               </div>

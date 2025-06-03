@@ -94,7 +94,7 @@ export default function AdvancedFilter({
                 <SelectValue placeholder={filter.placeholder || "Seçin"} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Tümü</SelectItem>
+                <SelectItem value="all">Tümü</SelectItem>
                 {filter.options?.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
