@@ -219,8 +219,18 @@ export class MemStorage implements IStorage {
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
     const id = this.currentId++;
     const property: Property = {
-      ...insertProperty,
       id,
+      type: insertProperty.type,
+      address: insertProperty.address,
+      landlordId: insertProperty.landlordId,
+      monthlyRent: insertProperty.monthlyRent,
+      area: insertProperty.area ?? null,
+      floor: insertProperty.floor ?? null,
+      hasBalcony: insertProperty.hasBalcony ?? null,
+      hasParking: insertProperty.hasParking ?? null,
+      isAvailable: insertProperty.isAvailable ?? null,
+      deposit: insertProperty.deposit ?? null,
+      description: insertProperty.description ?? null,
       createdAt: new Date(),
     };
     this.properties.set(id, property);
@@ -286,8 +296,16 @@ export class MemStorage implements IStorage {
   async createContract(insertContract: InsertContract): Promise<Contract> {
     const id = this.currentId++;
     const contract: Contract = {
-      ...insertContract,
       id,
+      landlordId: insertContract.landlordId,
+      tenantId: insertContract.tenantId,
+      propertyId: insertContract.propertyId,
+      monthlyRent: insertContract.monthlyRent,
+      startDate: insertContract.startDate,
+      endDate: insertContract.endDate,
+      deposit: insertContract.deposit ?? null,
+      isActive: insertContract.isActive ?? null,
+      terms: insertContract.terms ?? null,
       createdAt: new Date(),
     };
     this.contracts.set(id, contract);
@@ -389,8 +407,15 @@ export class MemStorage implements IStorage {
   async createPayment(insertPayment: InsertPayment): Promise<Payment> {
     const id = this.currentId++;
     const payment: Payment = {
-      ...insertPayment,
       id,
+      status: insertPayment.status,
+      tenantId: insertPayment.tenantId,
+      contractId: insertPayment.contractId,
+      amount: insertPayment.amount,
+      dueDate: insertPayment.dueDate,
+      paidDate: insertPayment.paidDate ?? null,
+      paymentMethod: insertPayment.paymentMethod ?? null,
+      notes: insertPayment.notes ?? null,
       createdAt: new Date(),
     };
     this.payments.set(id, payment);
