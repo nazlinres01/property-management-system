@@ -11,6 +11,7 @@ import {
   Home,
   Settings,
   X,
+  Brain,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -21,13 +22,14 @@ interface SidebarProps {
 }
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: BarChart3 },
+  { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
   { name: "Kiracılar", href: "/tenants", icon: Users },
   { name: "Ev Sahipleri", href: "/landlords", icon: UserRoundCheck },
   { name: "Mülkler", href: "/properties", icon: Building },
   { name: "Sözleşmeler", href: "/contracts", icon: FileText },
   { name: "Ödemeler", href: "/payments", icon: CreditCard },
   { name: "Raporlar", href: "/reports", icon: PieChart },
+  { name: "AI & Yapay Zeka", href: "/ai-dashboard", icon: Brain },
 ];
 
 export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
