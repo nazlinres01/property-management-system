@@ -112,7 +112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Store user session
-      req.session.userId = user.id;
+      (req.session as any).userId = user.id;
 
       res.json({
         message: "Giriş başarılı",
