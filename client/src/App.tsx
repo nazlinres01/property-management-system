@@ -15,11 +15,13 @@ import Reports from "@/pages/reports";
 import Features from "@/pages/features";
 import About from "@/pages/about";
 import Sidebar from "@/components/layout/sidebar";
+import ChatWidget from "@/components/chat/chat-widget";
 import { useState } from "react";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   // Check if user wants to see the landing page (default) or dashboard
   const showLandingPage = true;
@@ -101,6 +103,13 @@ function App() {
           
           <Route component={NotFound} />
         </Switch>
+        
+        {/* Global Chat Widget - Available on all dashboard pages */}
+        <ChatWidget 
+          isOpen={chatOpen} 
+          onToggle={() => setChatOpen(!chatOpen)} 
+        />
+        
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>

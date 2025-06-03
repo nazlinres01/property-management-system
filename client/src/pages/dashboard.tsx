@@ -23,6 +23,7 @@ import TenantModal from "@/components/modals/tenant-modal";
 import PropertyModal from "@/components/modals/property-modal";
 import ContractModal from "@/components/modals/contract-modal";
 import PropertyTable from "@/components/tables/property-table";
+import AIPanel from "@/components/chat/ai-panel";
 
 interface DashboardProps {
   onMenuClick?: () => void;
@@ -32,6 +33,7 @@ export default function Dashboard({ onMenuClick }: DashboardProps) {
   const [showTenantModal, setShowTenantModal] = useState(false);
   const [showPropertyModal, setShowPropertyModal] = useState(false);
   const [showContractModal, setShowContractModal] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["/api/dashboard/stats"],
