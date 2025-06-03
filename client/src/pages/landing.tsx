@@ -148,23 +148,47 @@ export default function Landing() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[hsl(var(--kiratakip-primary))]/5 to-[hsl(var(--kiratakip-secondary))]/10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-indigo-600/5 to-purple-600/5"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-purple-600/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-indigo-400/10 to-blue-600/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+      </div>
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-[hsl(var(--kiratakip-neutral-100))] sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-[hsl(var(--kiratakip-primary))] to-[hsl(var(--kiratakip-secondary))] rounded-lg flex items-center justify-center">
-                  <Key className="h-6 w-6 text-white" />
+      <header className="relative z-50 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-lg shadow-gray-900/5 sticky top-0">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform duration-200">
+                  <Key className="h-7 w-7 text-white" />
                 </div>
-                <h1 className="text-2xl font-bold text-[hsl(var(--kiratakip-neutral-800))]">
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full animate-pulse"></div>
+              </div>
+              <div>
+                <h1 className="text-3xl font-black bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
                   KiraTakip
                 </h1>
+                <p className="text-xs text-gray-500 font-medium tracking-wide">PROFESSIONAL EDITION</p>
               </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Button 
+                variant="ghost"
+                className="text-gray-600 hover:text-gray-900 font-medium px-6"
+              >
+                Özellikler
+              </Button>
+              <Button 
+                variant="ghost"
+                className="text-gray-600 hover:text-gray-900 font-medium px-6"
+              >
+                Hakkımızda
+              </Button>
               <Button 
                 onClick={() => window.location.href = "/dashboard"}
-                className="bg-[hsl(var(--kiratakip-primary))] hover:bg-[hsl(var(--kiratakip-primary))]/90 text-white"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >
                 Dashboard'a Git
               </Button>
@@ -174,63 +198,113 @@ export default function Landing() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative py-24 lg:py-32">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <Badge className="bg-[hsl(var(--kiratakip-primary))]/10 text-[hsl(var(--kiratakip-primary))] border-[hsl(var(--kiratakip-primary))]/20">
-                  Türkiye'nin Emlak Yönetim Platformu
-                </Badge>
-                <h2 className="text-5xl font-bold text-[hsl(var(--kiratakip-neutral-800))] leading-tight">
-                  Emlak Yönetiminde
-                  <span className="text-[hsl(var(--kiratakip-primary))]"> Yeni Nesil </span>
-                  Çözüm
-                </h2>
-                <p className="text-xl text-[hsl(var(--kiratakip-neutral-600))] leading-relaxed">
-                  Ev sahipleri, kiracılar, emlakçılar ve yönetim şirketleri için 
-                  tasarlanmış kapsamlı emlak yönetim sistemi. Tüm süreçlerinizi 
-                  dijitalleştirin, verimliliğinizi artırın.
-                </p>
+            <div className="space-y-10">
+              <div className="space-y-8">
+                <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-full px-6 py-3 shadow-sm">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span className="text-blue-700 font-semibold text-sm tracking-wide">TÜRKİYE'NİN #1 EMLAK YÖNETİM PLATFORMU</span>
+                </div>
+                
+                <div className="space-y-6">
+                  <h1 className="text-6xl lg:text-7xl font-black leading-tight">
+                    <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+                      Emlak Yönetiminde
+                    </span>
+                    <br />
+                    <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                      Dijital Devrim
+                    </span>
+                  </h1>
+                  
+                  <p className="text-xl lg:text-2xl text-gray-600 leading-relaxed font-light max-w-2xl">
+                    Fortune 500 şirketlerinin tercih ettiği teknoloji ile emlak portföyünüzü yönetin. 
+                    <span className="font-semibold text-gray-800"> %40 daha verimli, %60 daha hızlı.</span>
+                  </p>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-8 pt-8">
+                  <div className="text-center">
+                    <div className="text-3xl font-black text-blue-600">10K+</div>
+                    <div className="text-sm text-gray-600 font-medium">Aktif Kullanıcı</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-black text-indigo-600">50K+</div>
+                    <div className="text-sm text-gray-600 font-medium">Yönetilen Mülk</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-black text-purple-600">₺2M+</div>
+                    <div className="text-sm text-gray-600 font-medium">Aylık İşlem</div>
+                  </div>
+                </div>
               </div>
 
+              {/* Feature badges */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-[hsl(var(--kiratakip-neutral-700))]">Sözleşme Yönetimi</span>
+                <div className="flex items-center space-x-3 bg-emerald-50 border border-emerald-200/50 rounded-xl p-4">
+                  <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="text-emerald-800 font-semibold">AI Destekli Analiz</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-[hsl(var(--kiratakip-neutral-700))]">Otomatik Bildirimler</span>
+                <div className="flex items-center space-x-3 bg-blue-50 border border-blue-200/50 rounded-xl p-4">
+                  <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="text-blue-800 font-semibold">Blockchain Güvenlik</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-[hsl(var(--kiratakip-neutral-700))]">Finansal Raporlar</span>
+                <div className="flex items-center space-x-3 bg-purple-50 border border-purple-200/50 rounded-xl p-4">
+                  <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="text-purple-800 font-semibold">Otomatik Raporlama</span>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-[hsl(var(--kiratakip-neutral-700))]">Mobil Uyumlu</span>
+                <div className="flex items-center space-x-3 bg-orange-50 border border-orange-200/50 rounded-xl p-4">
+                  <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="text-orange-800 font-semibold">24/7 Destek</span>
                 </div>
               </div>
             </div>
+          </div>
 
             {/* Right Content - Auth Forms */}
             <div className="lg:pl-8">
-              <Card className="w-full max-w-md mx-auto shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
-                <CardHeader className="text-center pb-2">
-                  <CardTitle className="text-2xl text-[hsl(var(--kiratakip-neutral-800))]">
-                    Hesabınıza Erişin
-                  </CardTitle>
-                  <CardDescription>
-                    Emlak yönetimi platformuna giriş yapın veya hesap oluşturun
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
+              <div className="relative">
+                <div className="absolute -top-4 -left-4 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-3xl blur-2xl"></div>
+                <Card className="relative w-full max-w-lg mx-auto bg-white/95 backdrop-blur-xl border-0 shadow-2xl shadow-gray-900/10 rounded-3xl overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-indigo-50/50"></div>
+                  <CardHeader className="relative text-center pb-6 pt-12 px-8">
+                    <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                      <Key className="h-10 w-10 text-white" />
+                    </div>
+                    <CardTitle className="text-3xl font-black text-gray-900 mb-2">
+                      Hoş Geldiniz
+                    </CardTitle>
+                    <CardDescription className="text-gray-600 text-lg">
+                      Profesyonel emlak yönetimi deneyimini başlatın
+                    </CardDescription>
+                  </CardHeader>
+                <CardContent className="relative px-8 pb-12">
                   <Tabs value={activeTab} onValueChange={setActiveTab}>
-                    <TabsList className="grid w-full grid-cols-2 mb-6">
-                      <TabsTrigger value="login">Giriş Yap</TabsTrigger>
-                      <TabsTrigger value="register">Kayıt Ol</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100/80 rounded-2xl p-1 h-14">
+                      <TabsTrigger 
+                        value="login"
+                        className="rounded-xl font-semibold text-base data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-blue-600"
+                      >
+                        Giriş Yap
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="register"
+                        className="rounded-xl font-semibold text-base data-[state=active]:bg-white data-[state=active]:shadow-lg data-[state=active]:text-blue-600"
+                      >
+                        Kayıt Ol
+                      </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="login">
