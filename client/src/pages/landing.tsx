@@ -174,12 +174,14 @@ export default function Landing() {
             </div>
             <div className="flex items-center space-x-4">
               <Button 
+                onClick={() => window.location.href = "/features"}
                 variant="ghost"
                 className="text-gray-600 hover:text-gray-900 font-medium px-6"
               >
                 Özellikler
               </Button>
               <Button 
+                onClick={() => window.location.href = "/about"}
                 variant="ghost"
                 className="text-gray-600 hover:text-gray-900 font-medium px-6"
               >

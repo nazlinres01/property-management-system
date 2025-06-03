@@ -12,6 +12,8 @@ import Properties from "@/pages/properties";
 import Contracts from "@/pages/contracts";
 import Payments from "@/pages/payments";
 import Reports from "@/pages/reports";
+import Features from "@/pages/features";
+import About from "@/pages/about";
 import Sidebar from "@/components/layout/sidebar";
 import { useState } from "react";
 
@@ -28,6 +30,10 @@ function App() {
         <Switch>
           {/* Landing page as homepage */}
           <Route path="/" component={Landing} />
+          
+          {/* Static pages */}
+          <Route path="/features" component={Features} />
+          <Route path="/about" component={About} />
           
           {/* Dashboard routes with sidebar */}
           <Route path="/dashboard">
