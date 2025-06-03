@@ -133,8 +133,10 @@ export class MemStorage implements IStorage {
       }
     ];
 
+    const landlordIds: number[] = [];
     landlords.forEach(landlord => {
       const id = this.currentId++;
+      landlordIds.push(id);
       this.landlords.set(id, {
         ...landlord,
         id,
@@ -191,8 +193,10 @@ export class MemStorage implements IStorage {
       }
     ];
 
+    const tenantIds: number[] = [];
     tenants.forEach(tenant => {
       const id = this.currentId++;
+      tenantIds.push(id);
       this.tenants.set(id, {
         ...tenant,
         id,
@@ -205,7 +209,7 @@ export class MemStorage implements IStorage {
       {
         type: "Daire",
         address: "Barbaros Bulvarı No:45 D:8, Beşiktaş/İstanbul",
-        landlordId: 1,
+        landlordId: landlordIds[0],
         monthlyRent: "25000",
         area: 120,
         floor: 8,
@@ -218,7 +222,7 @@ export class MemStorage implements IStorage {
       {
         type: "Daire",
         address: "Bağdat Caddesi No:123 D:4, Kadıköy/İstanbul",
-        landlordId: 2,
+        landlordId: landlordIds[1],
         monthlyRent: "22000",
         area: 100,
         floor: 4,
@@ -231,7 +235,7 @@ export class MemStorage implements IStorage {
       {
         type: "Ofis",
         address: "Büyükdere Caddesi No:78 Kat:12, Şişli/İstanbul",
-        landlordId: 3,
+        landlordId: landlordIds[2],
         monthlyRent: "45000",
         area: 200,
         floor: 12,
@@ -244,7 +248,7 @@ export class MemStorage implements IStorage {
       {
         type: "Daire",
         address: "Tunalı Hilmi Caddesi No:67 D:6, Çankaya/Ankara",
-        landlordId: 4,
+        landlordId: landlordIds[3],
         monthlyRent: "18000",
         area: 110,
         floor: 6,
@@ -257,7 +261,7 @@ export class MemStorage implements IStorage {
       {
         type: "Daire",
         address: "Alsancak Mah. 1453 Sokak No:12 D:3, Konak/İzmir",
-        landlordId: 1,
+        landlordId: landlordIds[0],
         monthlyRent: "16000",
         area: 85,
         floor: 3,
@@ -270,7 +274,7 @@ export class MemStorage implements IStorage {
       {
         type: "Dükkan",
         address: "İstiklal Caddesi No:234, Beyoğlu/İstanbul",
-        landlordId: 2,
+        landlordId: landlordIds[1],
         monthlyRent: "35000",
         area: 60,
         floor: 0,
@@ -282,8 +286,10 @@ export class MemStorage implements IStorage {
       }
     ];
 
+    const propertyIds: number[] = [];
     properties.forEach(property => {
       const id = this.currentId++;
+      propertyIds.push(id);
       this.properties.set(id, {
         ...property,
         id,
@@ -294,9 +300,9 @@ export class MemStorage implements IStorage {
     // Sample Contracts - Active and historical rentals
     const contracts = [
       {
-        landlordId: 1,
-        tenantId: 1,
-        propertyId: 1,
+        landlordId: landlordIds[0],
+        tenantId: tenantIds[0],
+        propertyId: propertyIds[0],
         monthlyRent: "25000",
         startDate: new Date("2024-03-01"),
         endDate: new Date("2025-03-01"),
@@ -305,9 +311,9 @@ export class MemStorage implements IStorage {
         terms: "12 aylık kira sözleşmesi. Kira ödemeleri her ayın 5'inde yapılacaktır. Depozito sözleşme bitiminde iade edilecektir."
       },
       {
-        landlordId: 2,
-        tenantId: 2,
-        propertyId: 2,
+        landlordId: landlordIds[1],
+        tenantId: tenantIds[1],
+        propertyId: propertyIds[1],
         monthlyRent: "22000",
         startDate: new Date("2024-01-15"),
         endDate: new Date("2025-01-15"),
@@ -316,9 +322,9 @@ export class MemStorage implements IStorage {
         terms: "12 aylık kira sözleşmesi. Eşyalar kiracı sorumluluğundadır. Hasar durumunda onarım kiracıya aittir."
       },
       {
-        landlordId: 3,
-        tenantId: 3,
-        propertyId: 3,
+        landlordId: landlordIds[2],
+        tenantId: tenantIds[2],
+        propertyId: propertyIds[2],
         monthlyRent: "45000",
         startDate: new Date("2024-02-01"),
         endDate: new Date("2026-02-01"),
@@ -327,9 +333,9 @@ export class MemStorage implements IStorage {
         terms: "24 aylık ticari kira sözleşmesi. KDV dahil değildir. Ofis kullanımı için uygundur."
       },
       {
-        landlordId: 4,
-        tenantId: 4,
-        propertyId: 4,
+        landlordId: landlordIds[3],
+        tenantId: tenantIds[3],
+        propertyId: propertyIds[3],
         monthlyRent: "18000",
         startDate: new Date("2024-04-01"),
         endDate: new Date("2025-04-01"),
@@ -338,9 +344,9 @@ export class MemStorage implements IStorage {
         terms: "12 aylık kira sözleşmesi. Aidat ev sahibi tarafından ödenecektir. Doğalgaz faturası kiracıya aittir."
       },
       {
-        landlordId: 1,
-        tenantId: 5,
-        propertyId: 5,
+        landlordId: landlordIds[0],
+        tenantId: tenantIds[4],
+        propertyId: propertyIds[4],
         monthlyRent: "16000",
         startDate: new Date("2023-09-01"),
         endDate: new Date("2024-09-01"),
@@ -349,9 +355,9 @@ export class MemStorage implements IStorage {
         terms: "12 aylık kira sözleşmesi tamamlandı. Sözleşme yenilenmedi."
       },
       {
-        landlordId: 2,
-        tenantId: 1,
-        propertyId: 6,
+        landlordId: landlordIds[1],
+        tenantId: tenantIds[0],
+        propertyId: propertyIds[5],
         monthlyRent: "35000",
         startDate: new Date("2024-06-01"),
         endDate: new Date("2025-06-01"),
@@ -735,6 +741,9 @@ export class MemStorage implements IStorage {
       const tenant = this.tenants.get(contract.tenantId);
       const property = this.properties.get(contract.propertyId);
       const landlord = this.landlords.get(contract.landlordId);
+
+      console.log(`Contract ${contract.id}: tenant=${!!tenant}, property=${!!property}, landlord=${!!landlord}`);
+      console.log(`IDs: tenantId=${contract.tenantId}, propertyId=${contract.propertyId}, landlordId=${contract.landlordId}`);
 
       if (tenant && property && landlord) {
         result.push({
