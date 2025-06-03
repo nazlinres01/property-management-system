@@ -290,7 +290,7 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Sample Contracts - Active rentals
+    // Sample Contracts - Active and historical rentals
     const contracts = [
       {
         landlordId: 1,
@@ -301,7 +301,7 @@ export class MemStorage implements IStorage {
         endDate: new Date("2025-03-01"),
         deposit: "50000",
         isActive: true,
-        terms: "12 aylık kira sözleşmesi. Kira ödemeleri her ayın 5'inde yapılacaktır."
+        terms: "12 aylık kira sözleşmesi. Kira ödemeleri her ayın 5'inde yapılacaktır. Depozito sözleşme bitiminde iade edilecektir."
       },
       {
         landlordId: 2,
@@ -312,7 +312,7 @@ export class MemStorage implements IStorage {
         endDate: new Date("2025-01-15"),
         deposit: "44000",
         isActive: true,
-        terms: "12 aylık kira sözleşmesi. Eşyalar kiracı sorumluluğundadır."
+        terms: "12 aylık kira sözleşmesi. Eşyalar kiracı sorumluluğundadır. Hasar durumunda onarım kiracıya aittir."
       },
       {
         landlordId: 3,
@@ -323,7 +323,7 @@ export class MemStorage implements IStorage {
         endDate: new Date("2026-02-01"),
         deposit: "90000",
         isActive: true,
-        terms: "24 aylık ticari kira sözleşmesi. KDV dahil değildir."
+        terms: "24 aylık ticari kira sözleşmesi. KDV dahil değildir. Ofis kullanımı için uygundur."
       },
       {
         landlordId: 4,
@@ -334,7 +334,29 @@ export class MemStorage implements IStorage {
         endDate: new Date("2025-04-01"),
         deposit: "36000",
         isActive: true,
-        terms: "12 aylık kira sözleşmesi. Aidat ev sahibi tarafından ödenecektir."
+        terms: "12 aylık kira sözleşmesi. Aidat ev sahibi tarafından ödenecektir. Doğalgaz faturası kiracıya aittir."
+      },
+      {
+        landlordId: 1,
+        tenantId: 5,
+        propertyId: 5,
+        monthlyRent: "16000",
+        startDate: new Date("2023-09-01"),
+        endDate: new Date("2024-09-01"),
+        deposit: "32000",
+        isActive: false,
+        terms: "12 aylık kira sözleşmesi tamamlandı. Sözleşme yenilenmedi."
+      },
+      {
+        landlordId: 2,
+        tenantId: 1,
+        propertyId: 6,
+        monthlyRent: "35000",
+        startDate: new Date("2024-06-01"),
+        endDate: new Date("2025-06-01"),
+        deposit: "70000",
+        isActive: false,
+        terms: "Ticari dükkan kirası. Kiracı tarafından erken feshedildi."
       }
     ];
 
@@ -347,9 +369,50 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Sample Payments - Mix of paid, pending, and overdue
+    // Sample Payments - Comprehensive payment history
     const payments = [
-      // Paid payments
+      // Historical paid payments - October 2024
+      {
+        status: "paid",
+        tenantId: 1,
+        contractId: 1,
+        amount: "25000",
+        dueDate: new Date("2024-10-05"),
+        paidDate: new Date("2024-10-03"),
+        paymentMethod: "Banka Transferi",
+        notes: "Zamanında ödendi"
+      },
+      {
+        status: "paid",
+        tenantId: 2,
+        contractId: 2,
+        amount: "22000",
+        dueDate: new Date("2024-10-05"),
+        paidDate: new Date("2024-10-07"),
+        paymentMethod: "EFT",
+        notes: "2 gün geç ödendi"
+      },
+      {
+        status: "paid",
+        tenantId: 3,
+        contractId: 3,
+        amount: "45000",
+        dueDate: new Date("2024-10-01"),
+        paidDate: new Date("2024-09-28"),
+        paymentMethod: "Havale",
+        notes: "Erken ödeme yapıldı"
+      },
+      {
+        status: "paid",
+        tenantId: 4,
+        contractId: 4,
+        amount: "18000",
+        dueDate: new Date("2024-10-05"),
+        paidDate: new Date("2024-10-05"),
+        paymentMethod: "Otomatik Ödeme",
+        notes: "Banka otomatik ödemesi"
+      },
+      // November 2024 payments
       {
         status: "paid",
         tenantId: 1,
@@ -362,35 +425,36 @@ export class MemStorage implements IStorage {
       },
       {
         status: "paid",
-        tenantId: 2,
-        contractId: 2,
-        amount: "22000",
-        dueDate: new Date("2024-11-05"),
-        paidDate: new Date("2024-11-05"),
-        paymentMethod: "EFT",
-        notes: null
-      },
-      {
-        status: "paid",
         tenantId: 3,
         contractId: 3,
         amount: "45000",
         dueDate: new Date("2024-11-01"),
         paidDate: new Date("2024-10-30"),
         paymentMethod: "Çek",
-        notes: "Erken ödeme yapıldı"
+        notes: "Erken ödeme - çek ile"
       },
-      // Pending payments
       {
-        status: "pending",
+        status: "paid",
         tenantId: 4,
         contractId: 4,
         amount: "18000",
-        dueDate: new Date("2024-12-05"),
+        dueDate: new Date("2024-11-05"),
+        paidDate: new Date("2024-11-05"),
+        paymentMethod: "Otomatik Ödeme",
+        notes: "Banka otomatik ödemesi"
+      },
+      // Late payment in November
+      {
+        status: "overdue",
+        tenantId: 2,
+        contractId: 2,
+        amount: "22000",
+        dueDate: new Date("2024-11-05"),
         paidDate: null,
         paymentMethod: null,
-        notes: "Ödeme bekleniyor"
+        notes: "Geç ödeme - kiracı ile iletişim kuruldu. 15 gün gecikme"
       },
+      // December 2024 - Current period
       {
         status: "pending",
         tenantId: 1,
@@ -399,18 +463,69 @@ export class MemStorage implements IStorage {
         dueDate: new Date("2024-12-05"),
         paidDate: null,
         paymentMethod: null,
-        notes: null
+        notes: "Aralık ayı kirası - ödeme bekleniyor"
       },
-      // Overdue payment
       {
-        status: "overdue",
+        status: "pending",
+        tenantId: 3,
+        contractId: 3,
+        amount: "45000",
+        dueDate: new Date("2024-12-01"),
+        paidDate: null,
+        paymentMethod: null,
+        notes: "Ofis kirası - vadesi geçti"
+      },
+      {
+        status: "pending",
+        tenantId: 4,
+        contractId: 4,
+        amount: "18000",
+        dueDate: new Date("2024-12-05"),
+        paidDate: null,
+        paymentMethod: null,
+        notes: "Otomatik ödeme ayarlandı"
+      },
+      // September 2024 - Historical payments
+      {
+        status: "paid",
+        tenantId: 1,
+        contractId: 1,
+        amount: "25000",
+        dueDate: new Date("2024-09-05"),
+        paidDate: new Date("2024-09-04"),
+        paymentMethod: "Nakit",
+        notes: "Nakit ödeme - makbuz kesildi"
+      },
+      {
+        status: "paid",
         tenantId: 2,
         contractId: 2,
         amount: "22000",
-        dueDate: new Date("2024-11-25"),
-        paidDate: null,
-        paymentMethod: null,
-        notes: "Geç ödeme - kiracı ile iletişim kuruldu"
+        dueDate: new Date("2024-09-05"),
+        paidDate: new Date("2024-09-20"),
+        paymentMethod: "EFT",
+        notes: "15 gün geç ödendi - gecikme faizi alınmadı"
+      },
+      {
+        status: "paid",
+        tenantId: 3,
+        contractId: 3,
+        amount: "45000",
+        dueDate: new Date("2024-09-01"),
+        paidDate: new Date("2024-08-30"),
+        paymentMethod: "Havale",
+        notes: "Erken ödeme yapıldı"
+      },
+      // Partial payment example
+      {
+        status: "paid",
+        tenantId: 5,
+        contractId: 5,
+        amount: "8000",
+        dueDate: new Date("2024-09-01"),
+        paidDate: new Date("2024-09-15"),
+        paymentMethod: "EFT",
+        notes: "Sözleşme feshi nedeniyle kısmi ödeme"
       }
     ];
 
