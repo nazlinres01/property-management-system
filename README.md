@@ -2,6 +2,10 @@
 
 A comprehensive rental property management platform designed for landlords, property managers, real estate agents, and tenants in the Turkish rental market. KiraTakip streamlines property management operations with modern web technologies and AI-powered features.
 
+
+![Uploading Resim12.png…]()
+
+
 ## Features
 
 ### Core Functionality
