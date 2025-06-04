@@ -26,7 +26,7 @@ interface TenantsProps {
   onMenuClick?: () => void;
 }
 
-export default function Tenants({ onMenuClick }: TenantsProps) {
+export default function TenantManagement({ onMenuClick }: TenantsProps) {
   const [showModal, setShowModal] = useState(false);
   const [editingTenant, setEditingTenant] = useState<Tenant | undefined>();
   const [searchTerm, setSearchTerm] = useState("");

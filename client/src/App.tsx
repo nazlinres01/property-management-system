@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Landing from "@/pages/landing";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard-simple";
-import Tenants from "@/pages/tenants";
+import TenantManagement from "@/pages/tenant-management";
 import Landlords from "@/pages/landlords";
 import Properties from "@/pages/properties";
 import Contracts from "@/pages/contracts";
@@ -56,7 +56,7 @@ function App() {
             <div className="min-h-screen bg-[hsl(var(--kiratakip-surface))]">
               <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
               <main className="lg:ml-64 min-h-screen">
-                <Tenants onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+                <TenantManagement onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
               </main>
             </div>
           </Route>
